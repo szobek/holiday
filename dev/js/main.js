@@ -1,21 +1,50 @@
 function setDropdown(option) {
+    
     const users = window.user;
-    const company = option.value;
+    const company = parseInt(option.value);
     const select = document.querySelector("select[name='name']");
     select.innerHTML = '';
 
-    for(let i in users) {
+    let all = user.filter(item => {
+        let c = false;
+        for(let i in item.company_list) {
+             c = (item.company_list[i].id === company);
+             if(c) {
+                 let optionUser = document.createElement('option');
+                 optionUser.value = item.id;
+                 optionUser.innerHTML = item.name;
+                 select.appendChild(optionUser);
+                 break;
+             }
 
-        if(users[i].company == company) { // company && users[i].company = int
-            let optionUser = document.createElement('option');
-            optionUser.value = users[i].id;
-            optionUser.innerHTML = users[i].name;
-            select.appendChild(optionUser);
         }
-    }
+        return c;
+    });
+
 }
 
-$('.datepicker').datepicker({autoclose: true});
+
+window.testerPermission = (url) => {
+    if(confirm('Valóban?')) window.location = url;
+    return false;
+};
+
+
+$('.datepicker').datepicker({
+    autoclose: true,
+    days:["vasárnap","hétfő","kedd","szerda","csütörtök","péntek","szombat"],
+    daysShort:["vas","hét","ked","sze","csü","pén","szo"],
+    daysMin:["V","H","K","Sze","Cs","P","Szo"],
+    months:["január","február","március","április","május","június","július","augusztus","szeptember","október","november","december"],
+    monthsShort:["jan","feb","már","ápr","máj","jún","júl","aug","sze","okt","nov","dec"],
+    today:"ma",
+    weekStart:1,
+    clear:"töröl",
+    titleFormat:"yyyy. MM",
+    format:"yyyy-mm-dd"
+});
+
+
 $('.hidden-form').on('click', function () {
     $('#hidden-form').toggle();
 });
@@ -26,6 +55,10 @@ $(document).ready(function() {
 $('#company-selector').on('change', function () {
     setDropdown(this);
 });
+
+
+
+
 
 
 

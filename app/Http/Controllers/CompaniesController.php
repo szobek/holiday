@@ -28,6 +28,8 @@ class CompaniesController extends Controller
      */
     public static function companyProfile($id){
         $company = Companies::find($id);
+        $company->users = $company->userList();
+
         $action = '/companies/profile';
         return view('companies.profile', compact('company', 'action'));
     }

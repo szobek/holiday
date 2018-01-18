@@ -14,7 +14,7 @@
         function loadModifyData(event) {
             "use strict";
             window.event = event;
-            console.log('az event', event);
+
             $('#company-selector').val(event.company_id).prop('disabled', true);
             $("[name='name']").append(`<option>${event.name}</option>`).prop('disabled', true);
 

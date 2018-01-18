@@ -1,7 +1,7 @@
 <div class="container">
     <script>
-        window.user = {!! json_encode(\App\User::all()) !!}
-        window.companies = {!! json_encode(\App\Companies::all()) !!}
+        window.user = {!! json_encode(\App\Http\Controllers\AttendanceController::getUserListByPermission()) !!}
+        window.companies = {!! json_encode(\App\Http\Controllers\AttendanceController::getCompaniesListByPermission()) !!}
     </script>
 
 
@@ -22,8 +22,7 @@
 
                             <select name="company" id="company-selector" class="form-control">
                                 <option value="">Válasszon</option>
-                                @foreach(\App\Companies::all() as $company)
-
+                                @foreach(\App\Http\Controllers\AttendanceController::getCompaniesListByPermission() as $company)
                                     <option value="{{ $company->id }}">{{ $company->short_name }}</option>
                                 @endforeach
                             </select>
@@ -66,6 +65,7 @@
                                 <option value="1">Normál Szabadság</option>
                                 <option value="2">Beteg Szabadság</option>
                                 <option value="3">Egyéb</option>
+                                <option value="4">Előző év</option>
                             </select>
                         </div>
                     </div>

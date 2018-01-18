@@ -14,30 +14,48 @@
     <div class="container">
 
         <div class="row">
-            <div class="col">
-
+            <div class="col-6">
+                <h4>Adatok</h4>
                 <form method="post" action="{{ $action }}">
                     <div class="form-group">
                         <label for="short_name">Rövid név</label>
-                        <input type="text" value="{{ $company->short_name }}" class="form-control" name="short_name" id="short_name" required>
+                        <input type="text" value="{{ $company->short_name }}" class="form-control" name="short_name"
+                               id="short_name" required>
                     </div>
                     <div class="form-group">
                         <label for="name">Név</label>
-                        <input type="text" value="{{ $company->name }}" class="form-control" name="name" id="name"  required>
+                        <input type="text" value="{{ $company->name }}" class="form-control" name="name" id="name"
+                               required>
                     </div>
                     <div class="form-group">
                         <label for="address">Cím</label>
-                        <input type="text" value="{{ $company->address }}" class="form-control" name="address" id="address" required>
+                        <input type="text" value="{{ $company->address }}" class="form-control" name="address"
+                               id="address" required>
                     </div>
                     <div class="form-group">
                         <label for="tax">Adószám</label>
-                        <input type="text" value="{{ $company->tax }}" class="form-control" name="tax" id="tax" required>
+                        <input type="text" value="{{ $company->tax }}" class="form-control" name="tax" id="tax"
+                               required>
                     </div>
 
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <input type="hidden" name="id" value="{{ $company->id }}">
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
+            </div>
+
+            <div class="col-6">
+                <h4>Felhasználók</h4>
+                <ul class="list-unstyled">
+
+
+                    @foreach($company->users as $user)
+                        <li>
+                            <a href="/user/list/{{$user->id}}">{{ $user->name }}</a>
+                        </li>
+
+                    @endforeach
+                </ul>
             </div>
         </div>
 

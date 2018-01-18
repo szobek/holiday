@@ -6,6 +6,7 @@ use App\User;
 use Carbon\Carbon;
 use DateTimeZone;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Spatie\GoogleCalendar\Event;
 
 /**
@@ -84,10 +85,6 @@ class CalendarController extends Controller
 
     public static function findAllEventOfYearData($year, $month = null){
 
-//        dd($year);
-        /**
-         * itt kivételesen a hónap száma a rendese, és nem a js-ből ismert 0=1
-         */
 
         if(!isset($month) || $month === null) {
             $monthStart = 1;
@@ -108,8 +105,24 @@ class CalendarController extends Controller
 
 
         $returned = [];
+
+        $perm_own_company =  cp(6, Auth::user()->permission_listIds); // csak a saját cégeinek a szabadsága
+        $perm_all_company =  cp(2, Auth::user()->permission_listIds); // minden szabadságot lát
+
         foreach ($events as $event) {
-            $returned[] = self::getEventDesc($event);
+            $return_event = self::getEventDesc($event);
+            if($perm_all_company) {
+                $returned[] = $return_event;
+            } else if($perm_own_company) {
+                $ids = Auth::user()->company_list->pluck('id')->toArray();
+                if(in_array($return_event['company_id'], $ids)) {
+                    $returned[] = $return_event;
+                }
+            } else {
+
+            }
+
+
         }
 
 

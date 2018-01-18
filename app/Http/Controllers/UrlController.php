@@ -7,13 +7,25 @@ use App\HolidayTypes;
 use App\Mail\HolidayMaked;
 use App\NonWorking;
 use App\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Maatwebsite\Excel\Facades\Excel;
 use \PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
 class UrlController extends Controller
 {
+    private $feature;
+
+    function __construct()
+    {
+        $this->feature = [
+            'holi_days' => false
+        ];
+    }
+
+
     public function welcome(Request $request, $year = "")
     {
 
@@ -22,7 +34,8 @@ class UrlController extends Controller
         $events = CalendarController::findAllEventOfYearData($year);
 
 
-        return view('list.table', compact('events'));
+
+        return view('list/table', compact('events'));
     }
 
     /**
@@ -60,6 +73,23 @@ class UrlController extends Controller
         $name = $user->name;
         $start = Carbon::parse($request->start);
         $end = Carbon::parse($request->end);
+
+        // Hány napot foglal le...
+        $diff = $start->diffInDays( $end) + 1;
+        // ha nincs elég szabija
+
+
+        if($this->feature['holi_days'])
+            if(!UserController::checkFreeHolidays($user, $diff)) {
+                $msg = [
+                    "title" => "Kevés a szabid",
+                    "type" => "danger",
+                ];
+                return redirect()->back()->with(["msg"=>$msg]);
+            }
+
+
+
         $description = $request->description;
 
         if($start > $end) {
@@ -127,121 +157,6 @@ class UrlController extends Controller
         return CalendarController::deleteEvent($request->id);
     }
 
-    public function pdf($year = null, $month = null, $user_id = null) {
-
-        Carbon::setLocale('hu');
-
-        if($year == null || $month == null || $user_id == null) dd('Nincs dátum vagy cég');
-
-
-        $user = User::find($user_id);
-//        dd($user, $user_id);/
-        if(count($user) < 1)
-            return abort(404);
-
-        $company = Companies::find($user->company);
-        if(count($company) < 1)
-            return abort(404);
-
-        $events = CalendarController::findAllEventOfYearData($year, $month);
-
-        if(count($events) < 1) return redirect('/')->with('msg', ['title' => 'Nincs adat', 'type' => 'danger']);
-
-        $holidays = self::getHoliDaysSimpleUser($year, $month, $company, $user_id);
-
-        $start_day = Carbon::parse("$year-$month-01");
-        $end_day = $start_day->copy()->endOfMonth();
-
-        $non_working = NonWorking::where('year', $year)->get()->toArray();
-
-//        dd($non_working[0]);
-
-        $temp = $start_day->copy();
-        $items = [];
-        while($temp <= $end_day) {
-            if(in_array($temp->format('Y-m-d'), $holidays))
-                $items[] = ["num" => $temp->format('d'), 'disabled' => true];
-            else if($temp->isWeekend())
-                $items[] = ["num" => $temp->format('d'), 'disabled' => true];
-            else if(in_array($temp->format('Y-m-d'), $non_working[0]))
-                $items[] = ["num" => $temp->format('d'), 'disabled' => true];
-            else
-                $items[] = ["num" => $temp->format('d'), 'disabled' => false];
-            $temp = $temp->copy()->addDay();
-        }
-
-
-
-
-        $month = $start_day->copy()->format('F');
-
-        return view('pdf.jelenleti', compact('items','user', 'company', 'year', 'month'));
-
-    }
-
-    public function getHoliDaysAllUser($year, $month, $company) {
-        $events = CalendarController::findAllEventOfYearData($year, $month);
-        $users = [];
-        $temp = [];
-        foreach ($events as $event) {
-            if($event['company_id'] ===  $company->id) {
-                $users[$event['user_id']][] = $event;
-            }
-        }
-
-        foreach ($users as &$user) {
-            foreach ($user as &$u) {
-                $temp[$u['user_id']][] = $u['start'];
-                $diff = $u['start']->diffInDays($u['end']);
-                $u['holidays'][] = $u['start'];
-                $added = $u['start']->copy();
-                for($i = 0; $i<$diff; $i++) {
-                    $added = $added->copy()->addDay();
-                    $u['holidays'][] = $added;
-                    $temp[$u['user_id']][] = $added;
-                }
-            }
-        }
-
-        return [
-            'users' => $users,
-            'temp' => $temp,
-        ];
-
-    }
-
-    /**
-     * @param $year
-     * @param $month
-     * @param $company
-     * @param $user_id
-     * @return array
-     */
-    public function getHoliDaysSimpleUser($year, $month, $company, $user_id) {
-        $events = CalendarController::findAllEventOfYearData($year, $month);
-        $user_events = [];
-        $temp = [];
-
-        foreach ($events as $event) {
-            if($event['company_id'] ===  $company->id && $event['user_id'] == $user_id) {
-                $user_events[] = $event;
-            }
-        }
-
-
-        foreach ($user_events as &$u) {
-            $temp[] = $u['start']->format('Y-m-d');
-            $diff = $u['start']->diffInDays($u['end']);
-            $added = $u['start']->copy();
-            for($i = 0; $i<$diff; $i++) {
-                $added = $added->copy()->addDay();
-                $temp[] = $added->format('Y-m-d');
-            }
-        }
-
-        return $temp;
-    }
-
     public function usersView() {
         return UserController::userList();
 
@@ -250,7 +165,8 @@ class UrlController extends Controller
 
     public function usersProfile($id = null) {
         if($id == null) abort(404);
-        return UserController::userEdit($id);
+        $uc = new UserController();
+        return $uc->userEditView($id);
     }
 
     public function usersNewView() {
@@ -263,7 +179,8 @@ class UrlController extends Controller
 
 
     public function usersProfileUpdate(Request $request) {
-        return UserController::saveUser($request);
+        $uc = new UserController();
+        return $uc->saveUser($request);
     }
 
     public function nonWorkingView($year = null) {
@@ -302,5 +219,44 @@ class UrlController extends Controller
         return new HolidayMaked();
 //        Mail::send(new HolidayMaked());
     }
+
+    public static function convert( $str ) {
+        return iconv( "Windows-1252", "UTF-8", $str );
+    }
+
+    public static function csvTest(){
+        return;
+        $url = url("/upload/nonw.csv");
+
+        ini_set('auto_detect_line_endings',TRUE);
+        $file = fopen($url, "r");
+
+        $rows = 0;
+
+        while (($data = fgetcsv($file, 0, "\r")) !== FALSE) {
+            if($rows > 0) { // origin 0
+                $row = explode(";", $data[0]);
+                $row = array_map("self::convert", $row);
+                NonWorking::create([
+                    "name" => $row[2],
+                    "date" => $row[1],
+                    "year" => $row[0],
+                    "description" => $row[3],
+                    "type" => $row[4],
+                ]);
+
+            }
+            $rows++;
+
+        }
+
+
+
+        ini_set('auto_detect_line_endings',FALSE);
+        return "readCsv megvolt";
+    }
+
+
+
 
 }

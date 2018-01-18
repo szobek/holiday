@@ -19,11 +19,19 @@
 @section('content')
 
     <div class="container">
+
         <div class="row">
             <div class="col">
 
-                <table class="table" id="nonworkinglist">
+                <table class="table table-responsive" id="nonworkinglist">
                     <thead>
+                    <tr>
+                        <td colspan="4">
+                            @foreach($years as $year)
+                                <a class="btn btn-success btn-sm" href="/nonworking/{{ $year }}">{{ $year }}</a>
+                            @endforeach
+                        </td>
+                    </tr>
                     <tr>
                         <th>Év</th>
                         <th>Dátum</th>
@@ -33,7 +41,7 @@
                     </thead>
                     <tbody>
                     @foreach($non_working as $item)
-                        <tr>
+                        <tr class="@if($item->type == "holiday") table-danger @else table-success @endif">
                             <td>{{$item->year}}</td>
                             <td>{{$item->date}}</td>
                             <td>{{$item->name}}</td>
@@ -43,6 +51,9 @@
                     </tbody>
                 </table>
             </div>
+        </div>
+        <div class="row">
+            <div class="col text-center"><a href="/nonworking/create" class="btn btn-primary"><i class="fa fa-plus fa-2x"></i></a></div>
         </div>
     </div>
 

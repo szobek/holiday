@@ -33,8 +33,15 @@
                     <tbody>
                         @foreach($users as $user)
                         <tr>
-                            <td><a href="/user/profile/{{ $user->id }}">{{$user->name}}</a></td>
-                            <td>{{$user->company_data->short_name}}</td>
+                            <td><a href="{{ user_url($user->id) }}">{{$user->name}}</a></td>
+                            <td>
+                                <ul class="list-unstyled">
+                                    @foreach($user->company_list as $company)
+                                        <li><a href="{{ company_url($company->id) }}">{{$company->short_name}}</a></li>
+                                    @endforeach
+                                </ul>
+
+                            </td>
                             <td>{{$user->email}}</td>
                         </tr>
                         @endforeach

@@ -19,6 +19,7 @@ class CreateNonWorking extends Migration
             $table->string('year',4);
             $table->date('date');
             $table->string('description');
+            $table->string('type'); // ezzel jelzem, hogy a hétvége munkanap => holiday || work -> munkaszünet || hétvégi meló
         });
     }
 

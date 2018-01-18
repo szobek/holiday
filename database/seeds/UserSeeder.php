@@ -55,5 +55,6 @@ class UserSeeder extends Seeder
             "company" => 2,
         ]);
 
+
     }
 }

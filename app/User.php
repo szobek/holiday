@@ -15,7 +15,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','company'
+        'name', 'email', 'password','holidays','telephone'
     ];
 
 
@@ -23,12 +23,66 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    protected $appends = ['company_data'];
+    protected $appends = ['company_list', 'permission_list', 'permission_list_ids'];
 
 
-
-    public function getCompanyDataAttribute() {
-        return (Companies::find($this->company) !== null) ? Companies::find($this->company) : 'n/a';
+    public function getCompanyListAttribute() {
+        return $this->getCompanies();
     }
+
+    /**
+     * @author norbi
+     * @return
+     */
+    public function getCompaniesArray(){
+        return $this->belongsToMany(Companies::class);
+    }
+
+    /**
+     * @author norbi
+     * @return
+     */
+    public function getCompanies(){
+        return $this->getCompaniesArray()->get();
+    }
+
+    /**
+     * @author norbi
+     * @return
+     */
+    public function getPermissionArray(){
+        return $this->belongsToMany(Permission::class);
+    }
+
+    /**
+     * @author norbi
+     * @return
+     */
+    public function getPermission(){
+        return $this->getPermissionArray()->get();
+    }
+
+    public function getPermissionIds(){
+        return $this->getPermissionArray()->get()->pluck('id')->toArray();
+    }
+
+    /**
+     * @author norbi
+     * @return
+     */
+    public function getPermissionListAttribute(){
+        return $this->getPermission()->toArray();
+    }
+
+    public function getPermissionListIdsAttribute(){
+        return $this->getPermissionIds();
+    }
+
+
+
+
+
+
+
 }
 

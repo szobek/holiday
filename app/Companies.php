@@ -19,4 +19,20 @@ class Companies extends Model
     protected $hidden = [];
 
     public $timestamps = false;
+
+    /**
+     * @author norbi
+     * @return
+     */
+    public function userList(){
+        return $this->userListarray()->get();
+    }
+
+    /**
+     * @author norbi
+     * @return
+     */
+    public function userListarray(){
+        return $this->belongsToMany(User::class);
+    }
 }

@@ -4,7 +4,7 @@
     </button>
 
     <!-- Brand -->
-    <a class="navbar-brand" href="#">Saját Holiday </a>
+    <a class="navbar-brand" href="/">Céges Szabadságok</a>
 
     <!-- Links -->
     <div class="collapse navbar-collapse justify-content-center" id="nav-content">
@@ -17,6 +17,10 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/companies">Cégek</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="/permissions">Jogok</a>
             </li>
 
 

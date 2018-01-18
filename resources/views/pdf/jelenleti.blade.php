@@ -6,6 +6,7 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
+
     <title>Jelenléti ív</title>
     <style>
 
@@ -111,6 +112,28 @@
             top: 21px;
         }
 
+        div.holiday {
+            position: absolute;
+            background: #fff;
+            height: 15px;
+            left: -147px;
+            width: 146px;
+            z-index: 2000003;
+            color: black;
+            top: 15px;
+        }
+
+        .no-print {
+            width: 100%;
+            margin: 20px 15px;
+        }
+
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+        }
+
 
 
     </style>
@@ -118,6 +141,38 @@
 <body>
 
 <div class="container">
+
+    <div class="no-print" onclick="window.print()">
+        <button class="btn btn-primary">Nyomtatás</button>
+    </div>
+    <div class="no-print">
+
+        <label for="year">Év</label>
+        <select name="year" id="year">
+            @foreach($years as $y)
+                <option value="{{ $y }}" @if((int)Request::segment(2) === $y) selected @endif>{{ $y }}</option>
+            @endforeach
+        </select>
+
+        <label for="month">Hónap</label>
+        <select name="month" id="month">
+            @foreach($months as $m)
+                <option value="{{ $m }}"  @if((int)Request::segment(3) === $m) selected @endif>{{ $m }}</option>
+            @endforeach
+        </select>
+        <script>
+
+            window.goToPdf = function (user, company) {
+                let y = document.querySelector("#year").value, m = document.querySelector("#month").value;
+                let url = `/pdf/${y}/${m}/${user}/${company}`;
+                window.location = url;
+            };
+        </script>
+        <button onclick="window.goToPdf({{$user->id}},{{$company->id}})">mutasd</button>
+        <script>
+
+        </script>
+    </div>
 
     <div class="employer">
         <p>{{ $company->short_name }}</p>
@@ -153,7 +208,8 @@
                         <td class="fromto"></td>
                         <td class="sign"></td>
                         <td class="align hournum" rowspan="2">
-                            @if(!$item['disabled'])  @else <div class="strikeout"></div> @endif
+{{--                            @if(!$item['disabled'] && isset($item['holiday'])) @elseif(!$item['disabled']) <div class="holiday"></div>  @else <div class="strikeout"></div> @endif--}}
+                            @if($item['disabled'] && isset($item['holiday'])) <div class="holiday">Szabadság</div>  @elseif($item['disabled']) <div class="strikeout"></div> @else @endif
                         </td>
                     </tr>
                     <tr>
@@ -193,7 +249,8 @@
                         <td class="fromto"></td>
                         <td class="sign"></td>
                         <td class="align hournum" rowspan="2">
-                            @if(!$item['disabled'])  @else <div class="strikeout"></div> @endif
+{{--                            @if(!$item['disabled'])  @else <div class="strikeout"></div> @endif--}}
+                            @if($item['disabled'] && isset($item['holiday'])) <div class="holiday">Szabadság</div>  @elseif($item['disabled']) <div class="strikeout"></div> @else @endif
                         </td>
                     </tr>
                     <tr>
@@ -210,20 +267,6 @@
     <div class="clear"></div>
 
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 </body>
