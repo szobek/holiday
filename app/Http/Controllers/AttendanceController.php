@@ -109,6 +109,7 @@ class AttendanceController extends Controller
         $month = $start_day->copy()->format('F');
 
 //        dd($items);
+
         return view('pdf.jelenleti', compact('items','user', 'company', 'year', 'month','years', 'months'));
 
     }

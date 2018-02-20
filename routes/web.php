@@ -12,9 +12,15 @@ Auth::routes();
 
 Route::middleware(['auth'])->group(function () {
 
+    Route::get('/loginanother/{id}', 'TestController@loginUseId');
+
     Route::get('/', function() {
         return redirect('/list/' . date('Y'));
     });
+//    Route::get('/', 'TestController@testJson');
+
+
+
     Route::get('/pdf/{year}/{month}/{user_id}/{company_id}', 'AttendanceController@pdf');
     Route::get('/list/{year}', 'UrlController@welcome');
     Route::get('/update/{id}', 'UrlController@modifyEventView');
@@ -28,7 +34,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/user/profile/{id}', 'UrlController@usersProfile');
     Route::post('/user/profile', 'UrlController@usersProfileUpdate');
     Route::get('/user/new', 'UrlController@usersNewView');
-    Route::get('/user/delete/{id}', 'UserController@userDelete');
+    Route::get('/user/delete/{id}', 'UrlController@userDelete');
     Route::post('/user/new', 'UrlController@usersNew');
 
     Route::get('/companies', 'UrlController@listCompaniesView');
@@ -53,7 +59,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/permissions/{id}', 'PermissionController@editPermission');
 
 
-//    Route::get('testMail', 'UrlController@testMail');
+    Route::get('testMail', 'UrlController@testMail');
 //    Route::get('/csv', 'UrlController@csvTest');
 
 

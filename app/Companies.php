@@ -25,7 +25,12 @@ class Companies extends Model
      * @return
      */
     public function userList(){
-        return $this->userListarray()->get();
+//        dd('itt ', 'app/Companies.php:28');
+        $req = $this->userListarray();
+        if($req !== null)
+            return $this->userListarray()->get();
+        else
+            return null;
     }
 
     /**

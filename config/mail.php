@@ -120,4 +120,16 @@ return [
         ],
     ],
 
+    /**
+     * itt lesznek az alap adatok az emailhez, ezek állandóak:
+     *
+     *
+     */
+
+    'mail_settings' => [
+        'phone' => "06205340145",
+        'address' => "1015 Budapest, Batthyány utca 2., II/12",
+        'email' => "kunszt.norbert@gmail.com",
+    ]
+
 ];

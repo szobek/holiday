@@ -2,6 +2,7 @@
 
 namespace App;
 
+use FontLib\TrueType\Collection;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -71,11 +72,39 @@ class User extends Authenticatable
      * @return
      */
     public function getPermissionListAttribute(){
-        return $this->getPermission()->toArray();
+        $perm = $this->getPermission();
+//        dd($perm);
+        return ($perm !== null) ? $perm->toArray() : new Collection();
     }
 
     public function getPermissionListIdsAttribute(){
         return $this->getPermissionIds();
+    }
+
+
+
+    public function getUsersHolidaysArray() {
+        if(isset($this->id))
+            $req = $this->getUsersHolidays();
+            return ($req->count() > 0) ? $req->get() : null;
+        return null;
+    }
+
+    public function getUsersHolidays() {
+        return $this->hasMany(Holiday::class);
+    }
+
+    public function getCompaniesArrayTest($key, $value){
+        $req = $this->belongsToMany(Companies::class);
+//        dd($key, $value);
+        if(is_null($key) || is_null($value))
+            return $req;
+        else
+            return $req->where($key, $value);
+    }
+
+    public function getCompaniesTest($key = null, $value = null){
+        return $this->getCompaniesArrayTest($key, $value)->get();
     }
 
 

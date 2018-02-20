@@ -8,7 +8,7 @@
     <title>Document</title>
 </head>
 <body>
-
+    Valaki felvitt egy szabadságot
 
 </body>
 </html>

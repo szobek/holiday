@@ -17,7 +17,7 @@ class CompaniesController extends Controller
     public static function listCompanies(){
 
         $companies = Companies::all();
-        return view('companies.index', compact('companies'));
+        return view('companies/index', compact('companies'));
     }
 
     /**
@@ -31,7 +31,7 @@ class CompaniesController extends Controller
         $company->users = $company->userList();
 
         $action = '/companies/profile';
-        return view('companies.profile', compact('company', 'action'));
+        return view('companies/profile', compact('company', 'action'));
     }
 
     public static function saveCompany($request){

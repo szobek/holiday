@@ -3,12 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Companies;
+use App\Holiday;
+use App\Mail\RegistrationByUserValidate;
 use App\Permission;
 use App\User;
 use App\UserCompanies;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
@@ -17,22 +21,27 @@ class UserController extends Controller
 
     function __construct()
     {
+
         $userId = Auth::user();
-//        $userId = User::find(4);
         $this->user_permission = $userId->permissionList;
         $this->user_permissionIds = $userId->permission_list_ids;
+
     }
 
 
     /**
      * Megjeleníti a user listát
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Response
      */
-    public static function userList()
+    public function userList()
     {
+        if(!cp(9, $this->user_permissionIds)) {
+            return new Response('Nincs jog...', 403);
+        }
         $users = User::all();
         return view('users.index', compact('users'));
     }
+
 
     /**
      * Megjeleníti egy adott user profil oldalát
@@ -42,20 +51,22 @@ class UserController extends Controller
      */
     public function userEditView($id)
     {
-        if ((int)$id === Auth::user()->id || in_array(3, $this->user_permissionIds)) {
-        } else
-            dd("nem nézheti meg az oldalt", $this->user_permissionIds);
 
-
+        if ((int)$id === Auth::user()->id || cp(3, $this->user_permissionIds)) {
+        } else {
+            dd2("nem nézheti meg az oldalt", $this->user_permissionIds);
+            abort(404);
+        }
         $pl = $this->user_permissionIds;
         $user = User::find($id);
-        if (!count($user)) return abort(404);
+
         $companies_list = $user->getCompanies();
+
         $companies = Companies::all();
         $delete = true;
         if (!count($companies)) return abort(404);
         $action = '/user/profile';
-        return view('users.profile', compact('user', 'companies', 'action', 'delete', 'companies_list', 'pl'));
+        return view('users/profile', compact('user', 'companies', 'action', 'delete', 'companies_list', 'pl'));
     }
 
     /**
@@ -85,24 +96,45 @@ class UserController extends Controller
     public function saveUser($request)
     {
 
-        if (!cp(4, $this->user_permissionIds)) {
-            dd("Nem szerkesztheti");
-        }
+        $msg = [
+            "type" => "danger",
+            "title" => "",
+        ];
+        $permission = [
+            "alldata" => ((Auth::user()->id === (int)$request->id && cp(7, $this->user_permissionIds)) || cp(4, $this->user_permissionIds)),
+            "password" => Auth::user()->id === (int)$request->id
+        ];
+
 
         $user = User::find($request->id);
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->holidays = $request->holidays;
-        $user->telephone = $request->telephone;
 
-        self::setCompanies($request->id, $request->companies);
-
-        if (self::setNewPassword($request->passwordo, $request->password, $request->password2)) {
-            $user->password = bcrypt($request->password);
+        if($permission['alldata']) {
+            if(isset($request->name)) $user->name = $request->name;
+            if(isset($request->email)) $user->email = $request->email;
+            if(isset($request->holidays)) $user->holidays = $request->holidays;
+            if(isset($request->telephone)) $user->telephone = $request->telephone;
+            self::setCompanies($request->id, $request->companies);
+        } else {
+            $msg['title'] .= "Nincs jogod | ";
         }
+
+        if($permission['password']) {
+//            dd($request->passwordo);
+            if($request->passwordo !== null)
+                if (self::setNewPassword($request->passwordo, $request->password, $request->password2)) {
+                    $user->password = bcrypt($request->password);
+                } else {
+                    $msg['title'] .= "Nem jók a jelszavak | ";
+                    return redirect()->back()->with(["msg"=>$msg]);
+                }
+        }
+
+        $msg['title'] .= "User mentve";
+        $msg['type'] = "success";
         $user->save();
 
-        return redirect()->back();
+
+        return redirect()->back()->with(["msg"=>$msg]);
 
     }
 
@@ -114,20 +146,28 @@ class UserController extends Controller
     public static function setNewPassword($old, $new1, $new2)
     {
 
+        $equal = ($new1 === $new2);
+        $notEmpty = ($new1 !== "");
+        $length = (strlen($new1) >= 8);
+        $verify_old = password_verify($old, Auth::user()->getAuthPassword());
+
         return (
-            $new1 !== "" &&
-            strlen($new1) >= 8 &&
-            password_verify($old, Auth::user()->getAuthPassword()) &&
-            $new1 === $new2
+            $notEmpty &&
+            $length &&
+            $verify_old &&
+            $equal
         );
     }
 
-    public static function newUserView()
+    public function newUserView()
     {
 
+        if(!cp(8, $this->user_permissionIds)) {
+            return redirect()->to('/');
+        };
+        $pl = [];
         $companies = Companies::all();
         if (!count($companies)) return abort(404);
-
 
         $user = new Collection();
         $user->id = "";
@@ -140,32 +180,34 @@ class UserController extends Controller
         $companies_list = new Collection();
         $action = '/user/new';
         $psw = true;
-        return view('users.profile', compact('user', 'action', 'companies', 'psw', 'companies_list'));
+        return view('users.profile', compact('user', 'action', 'companies', 'psw', 'companies_list', 'pl'));
     }
 
 
-    public static function newUser($request)
+    public function newUser($request)
     {
+        if(!cp(8, $this->user_permissionIds)) {
+            return redirect()->to('/');
+        };
         $data = $request->all();
-
-        /*$validator  = $request->validate([
-            'name' => 'required',
-            'email' => 'required|unique:users',
-            'company' => 'required',
-            'password' => 'required',
-        ]);
-
-        dd($validator->errors());
-        $errors = $validator->errors();*/
-
         if ($request->password !== $request->password2) return redirect()->back();
 
 
         unset($data->id);
-        $data['password'] = bcrypt($data['password']);
+        $data['password'] = bcrypt($request->password);
         $user = User::create($data);
 
         self::setCompanies($user->id, $request->companies);
+//        $mail = new RegistrationByUserValidate($user, $pass);
+
+        // TODO kell küldeni majd egy mailt...
+/*        if(Mail::send($mail)) {
+
+        } else {
+            dd('hiba az email küldésnél');
+        }*/
+
+
         return redirect('/users');
     }
 
@@ -177,13 +219,15 @@ class UserController extends Controller
      */
     public function userDelete($id)
     {
+
         if (!isset($id) || $id == '') return abort(404);
         $user = User::find($id);
         if ($user == null) return abort(404);
 
         $user->delete();
 
-        return redirect()->to('/');
+        return true;
+
 
     }
 

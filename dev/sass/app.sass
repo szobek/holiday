@@ -6,5 +6,41 @@ body
   .left-border
     border-left: 1px solid black
     @media screen and (max-width: 992px)
-      display: none
+      border-left: none
 
+.nav-item.dropdown
+  a
+    color: white
+  .dropdown-menu
+    a
+      color: black !important
+
+.navbar-brand
+  position: relative
+  .md-down
+    display: none
+  @media screen and (max-width: 770px)
+    .md-up
+      display: none
+    .md-down
+      display: inline-block
+      width: 50px
+      height: 20px
+      color: white
+  @media screen and (max-width: 575px)
+    &
+      height: 15px
+      position: absolute
+      top: 5px
+      left: 50%
+      transform: translateX(-50%)
+@media (min-width: 576px)
+  .navbar-expand-sm .navbar-nav .nav-link
+    padding-right: 0
+
+
+.dataTable
+  tr
+    @media screen and (max-width: 770px)
+      td, th
+        font-size: 12px

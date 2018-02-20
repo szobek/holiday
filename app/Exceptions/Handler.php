@@ -58,6 +58,8 @@ class Handler extends ExceptionHandler
         if($exception instanceof Google_Service_Exception) {
             return redirect('/');
         }
+
+
         return parent::render($request, $exception);
     }
 }

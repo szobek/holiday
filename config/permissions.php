@@ -13,4 +13,7 @@ return [
     4 => "Más profilját szerkesztheti",
     5 => "Jogokat szerkesztheti",
     6 => "Csak a saját cégeinek a szabadságait látja",
+    7 => "Saját profilját szerkesztheti",
+    8 => "Új felhasználó létrehozás",
+
 ];

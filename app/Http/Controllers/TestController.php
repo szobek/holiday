@@ -18,4 +18,57 @@ class TestController extends Controller
 		print "ok";
 	}
 
+	public static function parseKml() {
+//	    $file = fopen(public_path('adm1.kml'), 'r');
+        $xml=simplexml_load_file(public_path('adm1.kml'));
+        $arr = [];
+        foreach ($xml->Document->Placemark as $obj) {
+            $name = $obj->name;
+            $coordinates = $obj->MultiGeometry->Polygon->outerBoundaryIs->LinearRing->coordinates;
+            $coordString = str_replace("\n",' ', $coordinates);
+            $temp = explode(' ',$coordString);
+            $end = array_shift($temp);
+
+
+            $arr[] = [
+                "name" => $name,
+                "coordinates" => (string)$coordinates
+            ];
+
+        }
+
+        dd($arr);
+
+
+    }
+
+    /**
+     * @author norbi
+     * @return
+     */
+    public function testJson(){
+        $url = "http://polygons.openstreetmap.fr/get_geojson.py?id=1447608&params=0";
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HEADER, TRUE);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        $response = curl_exec($ch);
+
+        // Then, after your curl_exec call:
+        $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+        $body = substr($response, $header_size);
+
+        dd((json_decode($body)->geometries[0]->coordinates[0])[0]);
+    }
+
+
+    /**
+     * @author norbi
+     * @return
+     */
+    public function loginUseId($id){
+        Auth::loginUsingId($id);
+        return redirect('/');
+    }
+
 }

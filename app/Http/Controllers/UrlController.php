@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Companies;
 use App\HolidayTypes;
 use App\Mail\HolidayMaked;
+use App\Mail\RegistrationByUserValidate;
 use App\NonWorking;
 use App\User;
 use Illuminate\Support\Facades\Auth;
@@ -32,8 +33,6 @@ class UrlController extends Controller
         if($year == "") $year = date('Y-m-d'); // ha nincs megadva, akkor az aktuális évet választom
 
         $events = CalendarController::findAllEventOfYearData($year);
-
-
 
         return view('list/table', compact('events'));
     }
@@ -158,9 +157,8 @@ class UrlController extends Controller
     }
 
     public function usersView() {
-        return UserController::userList();
-
-
+        $userController = new UserController();
+        return $userController->userList();
     }
 
     public function usersProfile($id = null) {
@@ -170,17 +168,28 @@ class UrlController extends Controller
     }
 
     public function usersNewView() {
-        return UserController::newUserView();
+
+        $u = new UserController();
+
+        return $u->newUserView();
     }
 
     public function usersNew(Request $request) {
-        return UserController::newUser($request);
-    }
+        $u = new UserController();
 
+        return $u->newUser($request);
+
+    }
 
     public function usersProfileUpdate(Request $request) {
         $uc = new UserController();
         return $uc->saveUser($request);
+    }
+
+    public function userDelete($id) {
+        $u = new UserController();
+        if($u->userDelete($id));
+            return redirect()->to('/');
     }
 
     public function nonWorkingView($year = null) {
@@ -216,7 +225,10 @@ class UrlController extends Controller
      */
     public function testMail(){
 
-        return new HolidayMaked();
+
+//        $mail = new HolidayMaked();
+//        return $mail;
+//        return Mail::send($mail);
 //        Mail::send(new HolidayMaked());
     }
 

@@ -65,7 +65,7 @@
                                 <option value="1">Normál Szabadság</option>
                                 <option value="2">Beteg Szabadság</option>
                                 <option value="3">Egyéb</option>
-                                <option value="4">Előző év</option>
+                                <option value="4">Nem számított</option>
                             </select>
                         </div>
                     </div>

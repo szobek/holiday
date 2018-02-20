@@ -11,8 +11,12 @@
     </head>
     <body>
 
+
+
+
         @include('nav.index')
         @include('list.message')
+
 
         @yield('content')
 

@@ -134,6 +134,13 @@
             }
         }
 
+        .tokesuly-num {
+            position: absolute;
+            top: 10px;
+            left: 425px;
+            width: 250px;
+        }
+
 
 
     </style>
@@ -180,6 +187,12 @@
             {{ $company->address }} <br>
             {{ $company->tax }}
         </p>
+
+        @if($company->id === 4)
+            <section class="tokesuly-num">
+                GINOP-2.1.7-15-2016-00105
+            </section>
+        @endif
 
     </div>
 

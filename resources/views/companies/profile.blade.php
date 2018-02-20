@@ -40,7 +40,7 @@
 
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <input type="hidden" name="id" value="{{ $company->id }}">
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary">Mentés</button>
                 </form>
             </div>
 
@@ -48,13 +48,14 @@
                 <h4>Felhasználók</h4>
                 <ul class="list-unstyled">
 
+                    @if(isset($company->users))
+                        @foreach($company->users as $user)
+                            <li>
+                                <a href="/user/profile/{{$user->id}}">{{ $user->name }}</a>
+                            </li>
 
-                    @foreach($company->users as $user)
-                        <li>
-                            <a href="/user/list/{{$user->id}}">{{ $user->name }}</a>
-                        </li>
-
-                    @endforeach
+                        @endforeach
+                    @endif
                 </ul>
             </div>
         </div>
