@@ -107,6 +107,22 @@ class User extends Authenticatable
         return $this->getCompaniesArrayTest($key, $value)->get();
     }
 
+    /**
+     * @author norbi
+     * @return
+     */
+    public function keres(){
+        return [];
+    }
+
+    /**
+     * @author norbi
+     * @return
+     */
+    public function keres2(){
+        return $this->getCompaniesArray()->get();
+    }
+
 
 
 
