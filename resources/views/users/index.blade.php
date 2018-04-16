@@ -50,9 +50,7 @@
             </div>
         </div>
 
-        <div class="col text-center">
-            <a href="/user/new" class="btn btn-primary btn-lg">Új felhasználó</a>
-        </div>
+
     </div>
 
 

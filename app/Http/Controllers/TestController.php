@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\User;
 use App\UserCompanies;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class TestController extends Controller
 {
@@ -68,8 +70,10 @@ class TestController extends Controller
      * @author norbi
      * @return
      */
-    public function loginUseId($id){
-        Auth::loginUsingId($id);
+    public function loginUseId(Request $request, $id){
+//        if($_SERVER['SERVER_NAME'] === "localhost")
+        if(Auth::user()->id === 1)
+            Auth::loginUsingId($id);
         return redirect('/');
     }
 
@@ -101,6 +105,17 @@ class TestController extends Controller
             $arr[] = $item;
         dd($arr);
 
+    }
+
+
+
+    public static function saveFile(Request $request) {
+
+        $path = $request->file('image')->store(
+            'upload/');
+        return json_encode($path);
+
+//        Storage::putFileAs('photos', new File('/upload'), 'photovalami.jpg');
     }
 
 

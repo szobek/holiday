@@ -76,6 +76,7 @@ class PermissionController extends Controller
      * @return
      */
     public function addPermissionToUser($user_id, $permission_id){
+        if(!cp(5, session('permissions'))) return abort(403, 'Http/Controllers/PermissionController.php:79');
         $permission = Permission::find($permission_id);
         if($permission === null)  return redirect()->back();
 

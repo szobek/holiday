@@ -194,6 +194,12 @@
             </section>
         @endif
 
+        @if($company->id === 7)
+            <section class="tokesuly-num">
+                GINOP-2.1.7-15-2016-00187
+            </section>
+        @endif
+
     </div>
 
     <div class="half">
@@ -212,17 +218,28 @@
                 <td class="align sign">Aláírás</td>
                 <td class="align">Ledolg. óra</td>
             </tr>
-            @foreach($items as $key => $item)
+            @foreach($pdfData as $key => $item)
                 {{--{{ dd($loop)  }}--}}
-                @if($item['num'] < 16)
+                @if($item->num < 16)
                     <tr>
-                        <td class="align daynum" rowspan="2">{{$item['num']}}</td>
+                        <td class="align daynum" rowspan="2">{{$item->num}}</td>
                         <td class="check">Érkezett</td>
                         <td class="fromto"></td>
                         <td class="sign"></td>
                         <td class="align hournum" rowspan="2">
-{{--                            @if(!$item['disabled'] && isset($item['holiday'])) @elseif(!$item['disabled']) <div class="holiday"></div>  @else <div class="strikeout"></div> @endif--}}
-                            @if($item['disabled'] && isset($item['holiday'])) <div class="holiday">Szabadság</div>  @elseif($item['disabled']) <div class="strikeout"></div> @else @endif
+
+                            {{--szabadság--}}
+                            @if($item->sick)
+                                <div class="holiday">Betegszabadság</div>
+                            @elseif($item->holiday)
+                                <div class="holiday">Szabadság</div>
+                            {{--hétvége--}}
+                            @elseif(!$item->workDay)
+                                <div class="strikeout"></div>
+                            {{--betegszabi--}}
+                            @else
+
+                            @endif
                         </td>
                     </tr>
                     <tr>
@@ -236,6 +253,8 @@
             </tbody>
         </table>
     </div>
+
+
     <div class="half">
         <table class="sheet">
             <thead>
@@ -253,17 +272,27 @@
                 <td class="align">Ledolg. óra</td>
             </tr>
 
-            @foreach($items as $key => $item)
-                {{--{{ dd($loop)  }}--}}
-                @if($item['num'] > 15)
+            @foreach($pdfData as $key => $item)
+                @if($item->num > 15)
                     <tr>
-                        <td class="align daynum" rowspan="2">{{$item['num']}}</td>
+                        <td class="align daynum" rowspan="2">{{$item->num}}</td>
                         <td class="check">Érkezett</td>
                         <td class="fromto"></td>
                         <td class="sign"></td>
                         <td class="align hournum" rowspan="2">
-{{--                            @if(!$item['disabled'])  @else <div class="strikeout"></div> @endif--}}
-                            @if($item['disabled'] && isset($item['holiday'])) <div class="holiday">Szabadság</div>  @elseif($item['disabled']) <div class="strikeout"></div> @else @endif
+
+                            {{--szabadság--}}
+                            @if($item->sick)
+                                <div class="holiday">Betegszabadság</div>
+                            @elseif($item->holiday)
+                                <div class="holiday">Szabadság</div>
+                                {{--hétvége--}}
+                            @elseif(!$item->workDay)
+                                <div class="strikeout"></div>
+                                {{--betegszabi--}}
+                            @else
+
+                            @endif
                         </td>
                     </tr>
                     <tr>

@@ -67,7 +67,8 @@ class NonWorkingController extends Controller
      */
     public function nonWorkingCreateView(){
 
-        return view('nonworking.detail');
+        $years = [2017,2018,2019,2020];
+        return view('nonworking.detail', compact('years'));
     }
 
     /**
@@ -82,6 +83,7 @@ class NonWorkingController extends Controller
             'description' => 'required|max:255',
             'year' => 'required|max:255',
         ]);
+
 
         $create = NonWorking::create($request->all());
         return redirect()->back();

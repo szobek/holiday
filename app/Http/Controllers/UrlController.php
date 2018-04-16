@@ -8,12 +8,14 @@ use App\Mail\HolidayMaked;
 use App\Mail\RegistrationByUserValidate;
 use App\NonWorking;
 use App\User;
+use Google_Service_Calendar_EventExtendedProperties;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 use \PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Spatie\GoogleCalendar\Event;
 
 class UrlController extends Controller
 {
@@ -29,10 +31,14 @@ class UrlController extends Controller
 
     public function welcome(Request $request, $year = "")
     {
-
+//        dd($_SERVER, $_ENV, $_REQUEST, $_COOKIE);
+//        dd(session(''));
         if($year == "") $year = date('Y-m-d'); // ha nincs megadva, akkor az aktuális évet választom
+//        dd($this->testMail());
+
 
         $events = CalendarController::findAllEventOfYearData($year);
+//        dd($events);
 
         return view('list/table', compact('events'));
     }
@@ -111,30 +117,47 @@ class UrlController extends Controller
             "type" => $h_type->name,
             "type_id" => $h_type->id,
             "user_id" => $user->id,
+            "accepted" => 0
 
         ];
+
+
+
         $success = CalendarController::createFulldayEvent($data);
+        $data['eventId'] = $success->id;
+
 
         if(gettype($success) == "object") return redirect()->back()->with($msg); else dd( gettype($success));
     }
 
     public function modifyEventView($id){
+
+
+        // TODO itt még alakítani kell!!!
         $event = CalendarController::getEvent($id);
+//        dd($event->googleEvent->getExtendedProperties()->private);
+
 
         if
         (
             $event == null ||
-            count($event) < 1 ||
             $event->googleEvent->status == "cancelled"
         )
             return abort(404);
-        $event_data = CalendarController::getEventDesc($event);
 
-        return view('list.update', compact('event_data'));
+//        $event_data = CalendarController::getEventDesc($event);
+        $event_data = CalendarController::getPrivateData($event);
+
+        if(($event_data['user_id'] === Auth::user()->id && cp(16,Auth::user()->getPermissionIds()) ) || cp(15,Auth::user()->getPermissionIds())) {
+
+        }
+
+        return view('list/update', compact('event_data'));
 
     }
 
     public function modifyEvent(Request $request){
+
 
 
         $type = HolidayTypes::find($request->type);
@@ -148,8 +171,17 @@ class UrlController extends Controller
         if($data) {
             return redirect('/');
         } else {
-            return abort(404);
+            return abort(403);
         }
+    }
+
+    /**
+     * @author norbi
+     * @return
+     */
+    public function viewEvent(Request $request, $id){
+
+        return CalendarController::viewEvent($request);
     }
 
     public function deleteEvent(Request $request) {
@@ -187,6 +219,7 @@ class UrlController extends Controller
     }
 
     public function userDelete($id) {
+
         $u = new UserController();
         if($u->userDelete($id));
             return redirect()->to('/');
@@ -203,6 +236,7 @@ class UrlController extends Controller
 
     public function companyProfile($id){
         if($id == null) abort(404);
+
         return CompaniesController::companyProfile($id);
     }
 
@@ -223,12 +257,12 @@ class UrlController extends Controller
      *
      * @author norbi
      */
-    public function testMail(){
+    public function testMail($holidayData){
 
 
-//        $mail = new HolidayMaked();
-//        return $mail;
-//        return Mail::send($mail);
+        $mail = new HolidayMaked($holidayData);
+        dd($mail);
+        return Mail::send($mail);
 //        Mail::send(new HolidayMaked());
     }
 
@@ -268,6 +302,28 @@ class UrlController extends Controller
         return "readCsv megvolt";
     }
 
+    /**
+     * @author norbi
+     * @return
+     */
+    public function searchEventView(){
+        $events = [];
+        return view('list/search')->with(["events" => $events]);
+    }
+
+    /**
+     * @author norbi
+     * @return
+     */
+    public function searchEvent(Request $request){
+
+        //        $temp = Event::get(null, null, ['privateExtendedProperty' => 'a%3Dusa']);
+
+
+        $events = HolidayController::serachByKey("user_id%3D$request->name");
+        dd($events);
+        return view('list/search')->with(["events" => $events]);
+    }
 
 
 

@@ -8,6 +8,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Spatie\GoogleCalendar\Event;
 
 class AttendanceController extends Controller
 {
@@ -28,7 +29,7 @@ class AttendanceController extends Controller
 
 
         $user = User::find($user_id);
-        if(count($user) < 1) {
+        if($user === null) {
             dd('hiba a user find-ban');
             return abort(404);
         }
@@ -42,59 +43,73 @@ class AttendanceController extends Controller
             return abort(404);
         }
 
-        if(count($company) < 1 ){
+        if($company === null){
             dd('hiba a company keresésben');
             return abort(404);
         }
 
 
         /**
-         * lekéri a userek szabadságait adott évre
+         * lekéri a userek szabadságait adott évre és hónapra
          */
         $temp = self::getHoliDaysSimpleUser($year, $month, $company, $user_id);
-        $holidays = (count($temp['holidays'])) ? $temp['holidays'] : [];
-        $cheats = (count($temp['cheats'])) ? $temp['cheats'] : [];
+
         $start_day = Carbon::parse("$year-$month-01");
-        $non_working = NonWorking::where('year', $year)->where('type','holiday')->get()->toArray();
+        $end_day = $start_day->copy()->endOfMonth();
+        $tempDay = $start_day->copy();
+
+        $non_working = NonWorking::where('year', $year)->where('type','holiday')->get()->toArray(); // munkaszüneti napok
         $saturdayWork = NonWorking::where('year', $year)->where('type','work')->get()->toArray();
 
-        $end_day = $start_day->copy()->endOfMonth();
-        $temp = $start_day->copy();
+        $pdfData = [];
 
 
-//        dd($temp);
-        $items = [];
-        while($temp <= $end_day) {
+        while($tempDay <= $end_day) {
+            $tempData = new \stdClass();
+            $tempData->num = $tempDay->format('d');
+            if(AttendanceController::isSick($tempDay->format('Y-m-d'), $temp)) {
+                $tempData->workDay = true;
+                $tempData->sick = true;
 
+            }
             // hétvégi munka
-            if(self::hasSaturdayWork($saturdayWork, $temp->format('Y-m-d')) && !in_array($temp->format('Y-m-d'), $holidays))
-                $items[] = ["num" => $temp->format('d'), 'disabled' => false];
+            else if(self::hasSaturdayWork($saturdayWork, $tempDay->format('Y-m-d')) ) {
+                $tempData->workDay = true;
+                $tempData->holiday = (AttendanceController::isHoliday($tempDay->format('Y-m-d'), $temp)) ? true : false;
+                $tempData->sick = false;
+            }
+            // nem szombat, csak sima szabi
+            else if(AttendanceController::isHoliday($tempDay->format('Y-m-d'), $temp)) {
+                $tempData->workDay = true;
+                $tempData->holiday = true;
+                $tempData->sick = false;
+            }
             // hétvége
-            else if($temp->isWeekend())
-                $items[] = ["num" => $temp->format('d'), 'disabled' => true];
-            // szabadságok
-            else if(in_array($temp->format('Y-m-d'), $holidays)) {
-                $cheat = (in_array($temp->format('Y-m-d'), $cheats));
-//                 dd($cheats, $holidays, $cheat);
-                if($cheat) {
-                    $items[] = ["num" => $temp->format('d'), 'disabled' => false, 'holiday' => false];
-                } else {
-                    $items[] = ["num" => $temp->format('d'), 'disabled' => true, 'holiday' => true];
-                }
+            else if($tempDay->isWeekend()) {
+                $tempData->workDay = false;
+                $tempData->holiday = false;
+                $tempData->sick = false;
+            }
 
+            // munkaszüneti nap
+            else if(count($non_working) > 0 && self::hasNonwork($non_working,$tempDay->format('Y-m-d'))) {
+                $tempData->workDay = false;
+                $tempData->holiday = false;
+                $tempData->sick = false;
+            }
+
+            else {
+                $tempData->workDay = true;
+                $tempData->holiday = false;
+                $tempData->sick = false;
             }
 
 
-            // munkaszüneti nap
-            else if(count($non_working) > 0 && self::hasNonwork($non_working,$temp->format('Y-m-d')))
-                $items[] = ["num" => $temp->format('d'), 'disabled' => true];
-            // azok a napok, amik előző évről maradtak...
-
-            // egyéb
-            else
-                $items[] = ["num" => $temp->format('d'), 'disabled' => false];
-            $temp = $temp->copy()->addDay();
+            $pdfData[] = $tempData;
+            $tempDay = $tempDay->copy()->addDay();
         }
+
+
 
 
         /**
@@ -110,7 +125,7 @@ class AttendanceController extends Controller
 
 //        dd($items);
 
-        return view('pdf.jelenleti', compact('items','user', 'company', 'year', 'month','years', 'months'));
+        return view('pdf.jelenleti', compact('pdfData','user', 'company', 'year', 'month','years', 'months'));
 
     }
 
@@ -168,10 +183,44 @@ class AttendanceController extends Controller
     public static function hasSaturdayWork($saturdays, $day){
         $has = false;
         foreach ($saturdays as $satday) {
-            if($satday['date'] === $day) $has = true;
+            if($satday['date'] === $day) {
+                $has = true;
+                break;
+            }
+
         }
         return $has;
     }
+
+    /**
+     * @author norbi
+     * @return
+     */
+    public static function isHoliday($day, $holidays){
+        $result = false;
+        foreach ($holidays as $holiday) {
+            if($holiday['type_id'] == 1 && $holiday['date'] == $day) {
+                $result = true;
+                break;
+            }
+        }
+        return $result;
+    }
+
+    public static function isSick($day, $holidays){
+        $result = false;
+        foreach ($holidays as $holiday) {
+            if($holiday['type_id'] == 2 && $holiday['date'] == $day) {
+                $result = true;
+                break;
+            }
+        }
+        return $result;
+    }
+
+
+
+
 
     /**
      * @param $year
@@ -181,18 +230,58 @@ class AttendanceController extends Controller
      * @return array
      */
     public function getHoliDaysSimpleUser($year, $month, $company, $user_id) {
-        $events = CalendarController::findAllEventOfYearData($year, $month);
+        $start = Carbon::parse("$year-$month-01");
+        $end = $start->copy()->endOfMonth();
+        $events = Event::get($start, $end, ['privateExtendedProperty' => "user_id%3D$user_id"]);
+
+
+//        dd($events);
+
+
+        $eventRows = []; // ebbe kerül az eventek listája nap szerint bontva
+
+        // eventek listája
+        foreach ($events as $eventRow) {
+
+            // lekérem az event adatait
+            $desc = CalendarController::getEventDesc($eventRow);
+//            dd($desc);
+
+            // a dátumok differenciája
+            $diff = $desc['start']->diffInDays($desc['end']);
+            $added = $desc['start']->copy();
+            for($i = 0; $i<=$diff; $i++) {
+                $eventRows[] = [
+                    "type" => $desc['type_id'],
+                    "date" => $added->toDatestring(),
+                    "type_id" => $desc['type_id'],
+                ];
+                // növelem a dátumot
+                $added = $added->copy()->addDay();
+            }
+
+        }
+
+
+        return $eventRows;
+
+
+
         $user_events = [];
         $temp = [];
         $cheats = [];
 
-//        dd($events,$user_id);
+//        dd2($events,$user_id);
 
+        // ahol a company és a user_id megegyezik
         foreach ($events as $event) {
-            if($event['company_id'] ===  $company->id && $event['user_id'] == $user_id) {
+//            dd2("keresett: $user_id | $company->id, company: " . $event['company_id'] . 'user: ' .  $event['user_id']);
+            if($event['company_id'] ==  $company->id && $event['user_id'] == $user_id) {
                 $user_events[] = $event;
             }
         }
+
+//        dd($user_events);
 
 
         foreach ($user_events as &$u) {
@@ -211,6 +300,7 @@ class AttendanceController extends Controller
         $ret =  [
             "holidays" => $temp,
             "cheats" => $cheats,
+            "sick" => [],
         ];
 
         return $ret;

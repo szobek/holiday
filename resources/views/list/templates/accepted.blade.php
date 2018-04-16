@@ -1,0 +1,1 @@
+<div class="status @if(isset($event['accepted']) && $event['accepted']) green @else red @endif"></div>

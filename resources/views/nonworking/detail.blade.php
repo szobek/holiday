@@ -50,11 +50,9 @@
                     <div class="form-group">
                         <label for="year">Mikor (év)</label>
                         <select class="form-control" name="year" id="year"  value="@if(isset($nwd) && isset($nwd->year)) {{$nwd->year}} @endif">
-                            <option value="2017">2017</option>
-                            <option value="2018">2018</option>
-                            <option value="2019">2019</option>
-                            <option value="2020">2020</option>
-                            <option value="2021">2021</option>
+                            @foreach($years as $year)
+                            <option value="{{ $year }}" @if(Date('Y')==$year) selected @endif>{{ $year }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="form-check">

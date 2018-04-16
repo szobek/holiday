@@ -36,10 +36,10 @@ class UserController extends Controller
     public function userList()
     {
         if(!cp(9, $this->user_permissionIds)) {
-            return new Response('Nincs jog...', 403);
+            return abort( 403);
         }
         $users = User::all();
-        return view('users.index', compact('users'));
+        return view('users/index', compact('users'));
     }
 
 
@@ -54,8 +54,8 @@ class UserController extends Controller
 
         if ((int)$id === Auth::user()->id || cp(3, $this->user_permissionIds)) {
         } else {
-            dd2("nem nézheti meg az oldalt", $this->user_permissionIds);
-            abort(404);
+//            dd2("nem nézheti meg az oldalt");
+            abort(403);
         }
         $pl = $this->user_permissionIds;
         $user = User::find($id);
@@ -66,7 +66,22 @@ class UserController extends Controller
         $delete = true;
         if (!count($companies)) return abort(404);
         $action = '/user/profile';
-        return view('users/profile', compact('user', 'companies', 'action', 'delete', 'companies_list', 'pl'));
+
+
+        /*** user szabadságai */
+        $year = date('Y');
+//        $events = CalendarController::findAllEventOfYearData($year);
+        $events = HolidayController::serachByKey("user_id%3D$id");
+//        dd($events);
+
+        $userEvents = [];
+        foreach ($events as $event) {
+            $userEvents[] = CalendarController::getPrivateData($event);
+        }
+        /****/
+
+
+        return view('users/profile', compact('user', 'companies', 'action', 'delete', 'companies_list', 'pl', 'userEvents'));
     }
 
     /**
@@ -107,6 +122,11 @@ class UserController extends Controller
 
 
         $user = User::find($request->id);
+
+        /*$user->password = bcrypt('123456789');
+        $user->save();
+
+        dd('vége', $user);*/
 
         if($permission['alldata']) {
             if(isset($request->name)) $user->name = $request->name;
@@ -163,7 +183,7 @@ class UserController extends Controller
     {
 
         if(!cp(8, $this->user_permissionIds)) {
-            return redirect()->to('/');
+            return abort(403);
         };
         $pl = [];
         $companies = Companies::all();
@@ -220,14 +240,15 @@ class UserController extends Controller
     public function userDelete($id)
     {
 
-        if (!isset($id) || $id == '') return abort(404);
-        $user = User::find($id);
-        if ($user == null) return abort(404);
-
-        $user->delete();
-
+        if(cp(11, $this->user_permissionIds)) {
+            if (!isset($id) || $id == '') return abort(404);
+            $user = User::find($id);
+            if ($user == null) return abort(404);
+            $user->delete();
+        } else {
+            abort(403);
+        }
         return true;
-
 
     }
 

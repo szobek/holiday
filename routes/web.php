@@ -3,9 +3,14 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
+
+Route::get('/loginanother/{id}', 'TestController@loginUseId');
+
 Route::get('/hash/{string}', function ($string) {
     return print bcrypt($string);
 });
+
+
 
 
 Route::get('/search', 'TestController@search');
@@ -15,9 +20,10 @@ Auth::routes();
 
 Route::middleware(['auth'])->group(function () {
 
-    Route::get('/loginanother/{id}', 'TestController@loginUseId');
+//    Route::get('/loginanother/{id}', 'TestController@loginUseId');
 
     Route::get('/', function() {
+
         return redirect('/list/' . date('Y'));
     });
 //    Route::get('/', 'TestController@testJson');
@@ -26,11 +32,14 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/pdf/{year}/{month}/{user_id}/{company_id}', 'AttendanceController@pdf');
     Route::get('/list/{year}', 'UrlController@welcome');
-    Route::get('/update/{id}', 'UrlController@modifyEventView');
+    Route::get('/event/update/{id}', 'UrlController@modifyEventView');
 
-    Route::post('/update', 'UrlController@modifyEvent');
+    Route::post('/event/update', 'UrlController@modifyEvent');
+    Route::get('/event/view/{id}', 'UrlController@viewEvent');
     Route::post('/create', 'UrlController@createEvent');
-    Route::post('/delete', 'UrlController@deleteEvent');
+    Route::post('/event/delete', 'UrlController@deleteEvent');
+    Route::get('/event/search', 'UrlController@searchEventView');
+    Route::post('/event/search', 'UrlController@searchEvent');
 
 
     Route::get('/users', 'UrlController@usersView');
@@ -66,7 +75,7 @@ Route::middleware(['auth'])->group(function () {
 //    Route::get('/csv', 'UrlController@csvTest');
 
 
-
+    Route::get('backup', 'CalendarController@backupGoogleEvents');
 
 });
 

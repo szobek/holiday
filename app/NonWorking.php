@@ -9,7 +9,7 @@ class NonWorking extends Model
     protected $table = 'non-working';
 
     protected $fillable = [
-        'name','year', 'date', 'description'
+        'name','year', 'date', 'description', 'type'
     ];
 
     protected $hidden = [];

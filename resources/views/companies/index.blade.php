@@ -33,7 +33,13 @@
                     <tbody>
                     @foreach($companies as $company)
                         <tr>
-                            <td><a href="/companies/profile/{{ $company->id }}">{{$company->short_name}}</a></td>
+                            <td>
+                                @if(cp(12, Auth::user()->getPermissionIds()))
+                                    <a href="/companies/profile/{{ $company->id }}">{{$company->short_name}}</a>
+                                @else
+                                    {{$company->short_name}}
+                                @endif
+                            </td>
                             <td>{{$company->address}}</td>
                             <td>{{$company->tax}}</td>
                         </tr>

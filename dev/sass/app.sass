@@ -1,8 +1,17 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans)
 @import "checkbox"
 @import "profile"
 
 body
+  font-family: 'Open Sans', sans-serif
   padding-top: 70px
+  font-size: 13px
+  .dropdown-menu, .navbar-brand, .form-control, .btn
+    font-size: inherit !important
+  .form-control
+    line-height: 13px
+    padding: 2px .75rem
+
   .left-border
     border-left: 1px solid black
     @media screen and (max-width: 992px)
@@ -44,3 +53,13 @@ body
     @media screen and (max-width: 770px)
       td, th
         font-size: 12px
+
+.status
+  width: 10px
+  height: 10px
+  border-radius: 50%
+  display: inline-block
+  &.green
+    background: green
+  &.red
+    background: red

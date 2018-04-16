@@ -5,6 +5,7 @@ function setDropdown(option) {
     const select = document.querySelector("select[name='name']");
     select.innerHTML = '';
 
+
     let all = user.filter(item => {
         let c = false;
         for(let i in item.company_list) {
@@ -47,6 +48,9 @@ $('.datepicker').datepicker({
 
 $('.hidden-form').on('click', function () {
     $('#hidden-form').toggle();
+    $('#holiday-table').toggle();
+    $(this).html('lenyitva')
+
 });
 $(document).ready(function() {
     if($('#holiday').length) $('#holiday').DataTable();
@@ -54,11 +58,6 @@ $(document).ready(function() {
 
 $('#company-selector').on('change', function () {
     setDropdown(this);
+
 });
-
-
-
-
-
-
 

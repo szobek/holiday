@@ -6,15 +6,23 @@
 
     <!-- Brand -->
     <a class="navbar-brand" href="/">
-        <section class="md-up">Céges Szabadságok</section>
-        <section class="md-down">CSZ</section>
+        <section class="md-up">Céges Szabadságok <img src="/assets/logo_medium.png" height="40" alt="logo"></section>
+        <section class="md-down"><img src="/assets/logo_medium.png" height="40" alt="logo"></section>
     </a>
 
     <!-- Links -->
     <div class="collapse navbar-collapse justify-content-center" id="nav-content">
         <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link" href="/list/{{date('Y')}}">Szabadságok</a>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="holidayDropdown" role="button"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Szabadságok
+                </a>
+                <div class="dropdown-menu" aria-labelledby="holidayDropdown">
+                    <a class="nav-link" href="/list/{{date('Y')}}">Lista</a>
+                    <a class="nav-link" href="/event/search">Keresés</a>
+                </div>
+
             </li>
             @if(cp(9, \Illuminate\Support\Facades\Auth::user()->permission_list_ids))
 
@@ -26,6 +34,9 @@
                     <div class="dropdown-menu" aria-labelledby="usersDropdown">
 
                         <a class="nav-link" href="/users">Felhasználói lista</a>
+                        @if(cp(8, \Illuminate\Support\Facades\Auth::user()->permission_list_ids))
+                            <a class="nav-link" href="/user/new">Új felhasználó</a>
+                        @endif
                         <div class="dropdown-divider"></div>
 
                     </div>
@@ -40,10 +51,14 @@
                     Beállítások
                 </a>
                 <div class="dropdown-menu" aria-labelledby="settingsDropdown">
-
+                    @if(cp(10, Auth::user()->getPermissionIds()))
                     <a class="nav-link" href="/companies">Cégek</a>
+                    @endif
+
                     <a class="nav-link" href="/permissions">Jogok</a>
+
                     <a class="nav-link" href="/nonworking">Ünnepnapok</a>
+
                     <div class="dropdown-divider"></div>
 
                 </div>

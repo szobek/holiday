@@ -29,6 +29,7 @@ if (! function_exists('company_url')) {
 if (! function_exists('cp')) {
     function cp($id, $perms)
     {
+        if($perms === null) return false;
         return in_array($id, $perms);
     }
 }

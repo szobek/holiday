@@ -8,6 +8,7 @@ use App\UserCompanies;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Spatie\GoogleCalendar\Event;
 
 class HolidayController extends Controller
 {
@@ -124,6 +125,13 @@ class HolidayController extends Controller
             Log::error($e);
             throw $e;
         }
+    }
+
+
+
+    public static function serachByKey($string) {
+
+        return Event::get(Carbon::parse('2018-01-01'), Carbon::parse('2018-12-31'), ['privateExtendedProperty' => $string]);
     }
 
 

@@ -12,6 +12,7 @@
         <div class="col-12 text-right"><i class="fa fa-times fa-2x hidden-form" aria-hidden="true"></i></div>
         @endif
         <div class="col-12">
+            <p>ide jön a privát data: <span data-private></span> </p>
 
             <form action="{{$action}}" method="post">
 
@@ -83,6 +84,21 @@
                         </div>
 
                     </div>
+
+                    @if(isset($show) && $show )
+                    <div class="col">
+                        <div class="input-group mb-2 mb-sm-0">
+                            <div class="input-group-addon">Státusz</div>
+                            <select name="accepted" id="accepted">
+                                <option value="0">Elutasítva</option>
+                                <option value="1">Elfogadva</option>
+                            </select>
+                        </div>
+
+                    </div>
+                    @endif
+
+
                 </div>
 
                 <br>

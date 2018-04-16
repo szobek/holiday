@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Companies;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CompaniesController extends Controller
 {
@@ -16,8 +17,14 @@ class CompaniesController extends Controller
      */
     public static function listCompanies(){
 
-        $companies = Companies::all();
-        return view('companies/index', compact('companies'));
+        if(cp(10, Auth::user()->getPermissionIds())) {
+            $companies = Companies::all();
+            return view('companies/index', compact('companies'));
+        } else {
+            return abort(403, 'Http/Controllers/CompaniesController.php:24');
+        }
+
+
     }
 
     /**
@@ -27,11 +34,17 @@ class CompaniesController extends Controller
      *
      */
     public static function companyProfile($id){
-        $company = Companies::find($id);
-        $company->users = $company->userList();
 
-        $action = '/companies/profile';
-        return view('companies/profile', compact('company', 'action'));
+        if(cp(12, Auth::user()->getPermissionIds())) {
+            $company = Companies::find($id);
+            $company->users = $company->userList();
+
+            $action = '/companies/profile';
+            return view('companies/profile', compact('company', 'action'));
+        } else {
+            abort(403);
+        }
+
     }
 
     public static function saveCompany($request){
