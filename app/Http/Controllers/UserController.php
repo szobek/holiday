@@ -78,6 +78,7 @@ class UserController extends Controller
         foreach ($events as $event) {
             $userEvents[] = CalendarController::getPrivateData($event);
         }
+
         /****/
 
 

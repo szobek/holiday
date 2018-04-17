@@ -53,6 +53,7 @@ class AttendanceController extends Controller
          * lekéri a userek szabadságait adott évre és hónapra
          */
         $temp = self::getHoliDaysSimpleUser($year, $month, $company, $user_id);
+//        dd($temp);
 
         $start_day = Carbon::parse("$year-$month-01");
         $end_day = $start_day->copy()->endOfMonth();
@@ -238,12 +239,14 @@ class AttendanceController extends Controller
 
         $eventRows = []; // ebbe kerül az eventek listája nap szerint bontva
 
+//        dd($events);
         // eventek listája
         foreach ($events as $eventRow) {
 
             // lekérem az event adatait
-            $desc = CalendarController::getEventDesc($eventRow);
-//            dd($desc);
+//            $desc = CalendarController::getEventDesc($eventRow);
+            $desc = CalendarController::getPrivateData($eventRow);
+
 
             // a dátumok differenciája
             $diff = $desc['start']->diffInDays($desc['end']);
