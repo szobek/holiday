@@ -128,10 +128,15 @@ class HolidayController extends Controller
     }
 
 
-
+    /**
+     * lekéri egy query paraméter alapján, hogy milyen eventek kellenek
+     * @param $string
+     * @return \Illuminate\Support\Collection
+     */
     public static function serachByKey($string) {
-
-        return Event::get(Carbon::parse('2018-01-01'), Carbon::parse('2018-12-31'), ['privateExtendedProperty' => $string]);
+        $start = Carbon::parse()->startOfYear();
+        $end = Carbon::parse()->endOfYear();
+        return Event::get($start, $end, ['privateExtendedProperty' => $string]);
     }
 
 

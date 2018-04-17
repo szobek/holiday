@@ -232,11 +232,9 @@ class AttendanceController extends Controller
     public function getHoliDaysSimpleUser($year, $month, $company, $user_id) {
         $start = Carbon::parse("$year-$month-01");
         $end = $start->copy()->endOfMonth();
-        $events = Event::get($start, $end, ['privateExtendedProperty' => "user_id%3D$user_id"]);
+        $req = ["user_id=$user_id", "company_id=$company->id"];
 
-
-//        dd($events);
-
+        $events = Event::get($start, $end, ['privateExtendedProperty' => $req]);
 
         $eventRows = []; // ebbe kerül az eventek listája nap szerint bontva
 
