@@ -4,29 +4,24 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 
-Route::get('/loginanother/{id}', 'TestController@loginUseId');
+
+Route::get('/testwhere', 'TestController@testWhere');
 
 Route::get('/hash/{string}', function ($string) {
     return print bcrypt($string);
 });
 
-
-
-
 Route::get('/search', 'TestController@search');
+
 
 Auth::routes();
 
 
 Route::middleware(['auth'])->group(function () {
 
-//    Route::get('/loginanother/{id}', 'TestController@loginUseId');
-
     Route::get('/', function() {
-
         return redirect('/list/' . date('Y'));
     });
-//    Route::get('/', 'TestController@testJson');
 
 
 

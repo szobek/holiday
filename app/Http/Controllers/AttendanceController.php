@@ -234,7 +234,6 @@ class AttendanceController extends Controller
         $start = Carbon::parse("$year-$month-01");
         $end = $start->copy()->endOfMonth();
         $req = ["user_id=$user_id", "company_id=$company->id"];
-
         $events = Event::get($start, $end, ['privateExtendedProperty' => $req]);
 
         $eventRows = []; // ebbe kerül az eventek listája nap szerint bontva

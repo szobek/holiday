@@ -31,15 +31,12 @@ class UrlController extends Controller
 
     public function welcome(Request $request, $year = "")
     {
-//        dd($_SERVER, $_ENV, $_REQUEST, $_COOKIE);
-//        dd(session(''));
+//        dd('http://' . $request->getHttpHost());
+
+
+
         if($year == "") $year = date('Y-m-d'); // ha nincs megadva, akkor az aktuális évet választom
-//        dd($this->testMail());
-
-
         $events = CalendarController::findAllEventOfYearData($year);
-//        dd($events);
-
         return view('list/table', compact('events'));
     }
 

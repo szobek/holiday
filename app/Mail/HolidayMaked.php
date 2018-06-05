@@ -29,9 +29,11 @@ class HolidayMaked extends Mailable
     public function build()
     {
         return $this
-            ->from('example@example.com')
+            ->from('szobek@holiday.com')
             ->to('kunszt.norbert@gmail.com')
-            ->view('mail.add');
+            ->subject('teszt email')
+//            ->view('mail.add');
+            ->view('mail.testmail');
 
     }
 }
