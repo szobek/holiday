@@ -11,5 +11,24 @@ class WorkHours extends Model
 
     public $fillable = ['user_id', 'type'];
 
+    public function getUsersArray(){
+        return $this->belongsToMany(User::class);
+    }
+
+    public function getUsers(){
+        return $this->getUsersArray()->get();
+    }
+
+    public function getUserObject(){
+        return $this->hasOne(User::class );
+    }
+
+    public function getUser(){
+        return $this->getUserObject()->get();
+    }
+
+
+
+
 
 }

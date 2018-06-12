@@ -72,6 +72,10 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('backup', 'CalendarController@backupGoogleEvents');
 
+    Route::resource('workhours', 'WorkhoursController');
+    Route::get('workhours/single-user/{id}', 'WorkhoursController@getSingleUserInteractions');
+    Route::get('workhours/single-day/{id}', 'WorkhoursController@getSingleDayInteractions');
+
 });
 
 
