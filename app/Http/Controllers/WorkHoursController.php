@@ -182,6 +182,21 @@ class WorkHoursController extends Controller
         return dd($this->formatData());
     }
 
+    public function getDateRangeInteractions($startDay, $endDay) {
+        $start = Carbon::parse($startDay)->startOfDay();
+        $end = Carbon::parse($endDay)->endOfDay();
+
+
+        dd(Carbon::parse($endDay) , Carbon::parse($startDay));
+
+        if(Carbon::parse($endDay) > Carbon::parse($startDay)) {
+            return "Not a valid date";
+        };
+
+        $this->interactions = WorkHours::whereBetween('created_at',[$start, $end])->get() ;
+        return dd($this->formatData());
+    }
+
 
 
 

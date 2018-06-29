@@ -323,5 +323,13 @@ class UrlController extends Controller
     }
 
 
+    /**
+     * @author norbi
+     * @return
+     */
+    public function routeTest(){
+        dd('llllll');
+    }
+
 
 }

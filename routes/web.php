@@ -19,10 +19,9 @@ Auth::routes();
 
 Route::middleware(['auth'])->group(function () {
 
-    Route::get('/', function() {
+    Route::get('/', function () {
         return redirect('/list/' . date('Y'));
     });
-
 
 
     Route::get('/pdf/{year}/{month}/{user_id}/{company_id}', 'AttendanceController@pdf');
@@ -74,15 +73,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('workhours', 'WorkhoursController');
     Route::get('workhours/single-user/{id}', 'WorkhoursController@getSingleUserInteractions');
-    Route::get('workhours/single-day/{id}', 'WorkhoursController@getSingleDayInteractions');
+    Route::get('workhours/single-day/{start}', 'WorkhoursController@getSingleDayInteractions');
+    Route::get('workhours/date-range/{start}/{end}', 'WorkhoursController@getDateRangeInteractions');
 
 });
-
-
-Route::get('/ck', function () {
-    return view('test');
-});
-
-
-
 
