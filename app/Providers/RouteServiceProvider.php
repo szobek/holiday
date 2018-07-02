@@ -39,8 +39,6 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->mapWebRoutes();
 
-        $this->mapWorkhoursRoutes();
-
         //
     }
 
@@ -74,16 +72,4 @@ class RouteServiceProvider extends ServiceProvider
              ->namespace($this->namespace)
              ->group(base_path('routes/api.php'));
     }
-
-
-    protected function mapWorkhoursRoutes()
-    {
-        Route::prefix('wh')
-             ->middleware(['web', 'prevent-back-history','constant'])
-             ->namespace($this->namespace)
-             ->group(base_path('routes/workhours.php'));
-    }
-
-
-
 }
