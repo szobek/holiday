@@ -75,6 +75,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('workhours', 'checkinController@listAll');
     Route::get('workhours/edit/{id}', 'checkinController@updateView');
     Route::post('workhours/edit/{id}', 'checkinController@updateWorkhour');
+    Route::get('workhours/delete/{id}', 'checkinController@deleteWorkhour');
 
     Route::get('workhours/single-user/{id}', 'checkinController@getSingleUserInteractions');
     Route::get('workhours/single-day/{start}', 'checkinController@getSingleDayInteractions');

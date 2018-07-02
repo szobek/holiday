@@ -97,7 +97,10 @@
                             <td><a href="/workhours/single-day/{{ $data['day'] }}">{{ $data['day'] }}</a></td>
                             <td>{{ $data['incoming'] }}</td>
                             <td>{{ $data['outgoing'] }}</td>
-                            <td><a href="/workhours/edit/{{$data['id']}}">szerk</a></td>
+                            <td>
+                                <a href="/workhours/edit/{{$data['id']}}">szerk</a>
+                                <button class="btn btn-danger" onclick="confirmDelete({{$data['id']}})" >törlés</button>
+                            </td>
                         </tr>
                     @endforeach
                     </tbody>

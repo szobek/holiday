@@ -230,4 +230,25 @@ class checkinController extends Controller
 
         return redirect()->back();
     }
+
+    /**
+     * @author norbi
+     * @return
+     */
+    public function deleteWorkhour(Request $request, $id){
+        if(!cp(18, Auth::user()->permissionList_ids)) {
+            return redirect()->to('/');
+        }
+
+        $wh = WorkHours::find($id);
+        if(is_null($wh)) {
+            abort(404);
+        }
+
+        $wh->delete();
+
+        return redirect()->back();
+
+
+    }
 }

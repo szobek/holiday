@@ -110,6 +110,12 @@ $(document).ready(function() {
         return false;
     }
 
+    window.confirmDelete = (id) => {
+        if(confirm('valóban törli??')) {
+            location.href = `/workhours/delete/${id}`;
+        }
+    }
+
 
 });
 
