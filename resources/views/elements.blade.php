@@ -6,6 +6,11 @@
 <link rel="stylesheet" href="/css/datepicker.css">
 <link rel="stylesheet" href="/build/css/app.css">
 
+
+
+
+<link rel="stylesheet" href="/3rdparty/jquery.datetimepicker.min.css">
+
 @endif
 
 
@@ -19,5 +24,14 @@
 <script src="/js/bootstrap-datepicker.js"></script>
 <script src="/build/js/app.js"></script>
 <script src="/js/hu.js"></script>
+
+
+<script
+        src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+
+
+<script src="/3rdparty/jquery.datetimepicker.full.min.js"></script>
 @endif
 

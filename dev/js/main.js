@@ -65,9 +65,52 @@ $(document).ready(function() {
             saveWorkHour('outgoing');
         });
 
-
-
     }
+
+    $(document).on('click','#searchRange', () => {
+        let ys, ye, ms, me, url;
+        ys = $('[name="year-start"]').val();
+        ms = $('[name="month-start"]').val();
+        ye = $('[name="year-end"]').val();
+        me = $('[name="month-end"]').val();
+        url = `/workhours/date-range/${ys}-${ms}-01/${ye}-${me}-31`;
+        // console.log(`/workhours/date-range/${ys}-${ms}-01/${ye}-${me}-31`)
+       location.href = url;
+    });
+
+
+
+
+
+    let h = [];
+    for(let i of ['07','08','09','10','11','12','13','14','15','16','17','18']) {
+        for(let q of ['00','15','30','45']) {
+            h.push(`${i}:${q}`);
+        }
+    }
+
+    let pickerConfig = {
+        allowTimes: h,
+        format:'Y-m-d H:i:s',
+        onChangeDateTime:function(dp,$input){
+            console.log($input.val(), $input[0].dataset.target);
+            $(`#${$input[0].dataset.target}`).val($input.val());
+        }
+
+    };
+
+    $('.datetimepicker.incoming').datetimepicker(pickerConfig);
+    $('.datetimepicker.outgoing ').datetimepicker(pickerConfig);
+
+    window.submitUpdateWorkhourForm = () => {
+        if($('[name="incoming"]').val() === '' || $('[name="outgoing"]').val() === '') {
+            alert('hibás adatok');
+        }
+        document.querySelector('#whForm').submit();
+        return false;
+    }
+
+
 });
 
 $('#company-selector').on('change', function () {

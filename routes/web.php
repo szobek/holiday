@@ -70,10 +70,15 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('backup', 'CalendarController@backupGoogleEvents');
 
-    Route::resource('workhours', 'WorkhoursController');
-    Route::get('workhours/single-user/{id}', 'WorkhoursController@getSingleUserInteractions');
-    Route::get('workhours/single-day/{start}', 'WorkhoursController@getSingleDayInteractions');
-    Route::get('workhours/date-range/{start}/{end}', 'WorkhoursController@getDateRangeInteractions');
+
+//    Route::resource('workhours', 'WorkhoursController');
+    Route::get('workhours', 'checkinController@listAll');
+    Route::get('workhours/edit/{id}', 'checkinController@updateView');
+    Route::post('workhours/edit/{id}', 'checkinController@updateWorkhour');
+
+    Route::get('workhours/single-user/{id}', 'checkinController@getSingleUserInteractions');
+    Route::get('workhours/single-day/{start}', 'checkinController@getSingleDayInteractions');
+    Route::get('workhours/date-range/{start}/{end}', 'checkinController@getDateRangeInteractions');
 
 });
 

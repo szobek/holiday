@@ -58,6 +58,7 @@
                     <a class="nav-link" href="/permissions">Jogok</a>
 
                     <a class="nav-link" href="/nonworking">Ünnepnapok</a>
+                    <a class="nav-link" href="/workhours">Jelenléti</a>
 
                     <div class="dropdown-divider"></div>
 

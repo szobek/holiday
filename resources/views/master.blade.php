@@ -23,4 +23,9 @@
     @include('elements',["js" => true])
     @yield('sub_js')
 
+
+
+
+
+
 </html>
