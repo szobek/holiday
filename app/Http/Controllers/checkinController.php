@@ -11,6 +11,7 @@ class checkinController extends Controller
 {
     public function createRow(Request $request) {
 
+
         $user = User::find($request->uid);
         $type = $request->type;
         if(!is_null($user)) {
@@ -23,16 +24,17 @@ class checkinController extends Controller
                     'user_id' => $user->id,
                     'type' => $type
                 ]);
-                return response()->json(['success' => true, 'message' => 'sikeres felvitel']);
+                $typeString = ($type === 'incoming') ? 'Érkezés' : 'Távozás';
+                return response()->json(['success' => true, 'message' => "sikeres felvitel, \r\n felhasználó: " .$user->name . ", \r\n interakció: $typeString"  ]);
 
             } else {
-                return response()->json(['success' => false, 'message' => 'sikertelen felvitel']);
+                return response()->json(['success' => false, 'message' => 'sikertelen felvitel, már lett rögzítve ilyen sor']);
 
             }
 
 
         } else {
-            return response()->json(['success' => false, 'message' => 'sikertelen felvitel']);
+            return response()->json(['success' => false, 'message' => 'sikertelen felvitel, nincs ilyen user']);
         }
     }
 }
