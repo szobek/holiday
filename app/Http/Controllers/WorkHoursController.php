@@ -100,13 +100,12 @@ class WorkHoursController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return boolean
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+
     }
 
     /**
@@ -196,6 +195,7 @@ class WorkHoursController extends Controller
         $this->interactions = WorkHours::whereBetween('created_at',[$start, $end])->get() ;
         return dd($this->formatData());
     }
+
 
 
 

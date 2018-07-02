@@ -54,10 +54,42 @@ $('.hidden-form').on('click', function () {
 });
 $(document).ready(function() {
     if($('#holiday').length) $('#holiday').DataTable();
+
+    if($('#wh-ci-container').length) {
+        $('#incoming').on('click', function() {
+            saveWorkHour('incoming');
+        });
+
+        $('#outgoing').on('click', function() {
+            saveWorkHour('outgoing');
+        });
+
+
+
+    }
 });
 
 $('#company-selector').on('change', function () {
     setDropdown(this);
-
 });
+
+
+
+
+let saveWorkHour = (type) => {
+    let data = {
+        uid: $('#user').val(),
+        type
+    };
+    $.ajax({
+        url: '/wh/checkin',
+        method: 'post',
+        data
+    }).done((res) => {
+        alert(res.message)
+
+    })
+};
+
+
 

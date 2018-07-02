@@ -80,7 +80,7 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapWorkhoursRoutes()
     {
         Route::prefix('wh')
-            ->middleware(['web', 'prevent-back-history','constant'])
+            ->middleware([ 'prevent-back-history'])
             ->namespace($this->namespace)
             ->group(base_path('routes/workhours.php'));
     }
