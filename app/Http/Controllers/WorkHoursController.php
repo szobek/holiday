@@ -78,8 +78,8 @@ class WorkHoursController extends Controller
             $obj[] = [
                 "user" => $user,
                 "user_id" => $user->id,
-                "time" => Carbon::parse($w->created_at)->format('H:i:s'),
-                "type" => $w->type,
+                "incoming" => Carbon::parse($w->incoming)->format('H:i:s'),
+                "outgoing" => Carbon::parse($w->outgoing)->format('H:i:s'),
                 "day" => Carbon::parse($w->created_at)->format('Y-m-d')
             ];
         }
@@ -94,9 +94,11 @@ class WorkHoursController extends Controller
      */
     public function index()
     {
-        $this->interactions = WorkHours::all();
+        $this->interactions = WorkHours::orderBy('created_at', 'asc')->get();
 
-        return dd($this->formatData());
+
+        $wh = $this->formatData();
+        return view('workhours/list/table', compact('wh'));
     }
 
     /**

@@ -54,6 +54,7 @@ $('.hidden-form').on('click', function () {
 });
 $(document).ready(function() {
     if($('#holiday').length) $('#holiday').DataTable();
+    if($('#workhours').length) $('#workhours').DataTable();
 
     if($('#wh-ci-container').length) {
         $('#incoming').on('click', function() {

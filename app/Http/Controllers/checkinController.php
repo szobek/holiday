@@ -13,17 +13,28 @@ class checkinController extends Controller
 
 
         $user = User::find($request->uid);
-        $type = $request->type;
+        $type = ($request->type === 'incoming') ? 'incoming' : 'outgoing' ;
         if(!is_null($user)) {
 
             $start = Carbon::now()->startOfDay();
             $end = Carbon::now()->endOfDay();
-            $row = WorkHours::where('user_id', $user->id)->where('type', $type)->whereBetween('created_at', array($start, $end))->first();
+            $row = WorkHours::where('user_id', $user->id)->whereNotNull($type)->whereBetween('created_at', array($start, $end))->first();
             if(is_null($row)) {
-                WorkHours::create([
-                    'user_id' => $user->id,
-                    'type' => $type
-                ]);
+
+                $whrow = WorkHours::where('user_id', $user->id)->whereBetween('created_at', array($start, $end))->first();
+                if(is_null($whrow)) { // ha még nincs felvíve sor
+                    WorkHours::create([
+                        $type => Carbon::now(),
+                        "user_id" => $user->id
+                    ]);
+                } else {
+                    $whrow->update([
+                        $type => Carbon::now()
+                    ]);
+                }
+
+
+
                 $typeString = ($type === 'incoming') ? 'Érkezés' : 'Távozás';
                 return response()->json(['success' => true, 'message' => "sikeres felvitel, \r\n felhasználó: " .$user->name . ", \r\n interakció: $typeString"  ]);
 

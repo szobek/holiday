@@ -9,7 +9,7 @@ class WorkHours extends Model
 
     protected $table = "workhours";
 
-    public $fillable = ['user_id', 'type'];
+    public $fillable = ['user_id', 'incoming', 'outgoing'];
 
     public function getUsersArray(){
         return $this->belongsToMany(User::class);
