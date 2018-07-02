@@ -10,6 +10,7 @@ Route::get('/hash/{string}', function ($string) {
     return print bcrypt($string);
 });
 
+
 Route::get('/search', 'TestController@search');
 
 
