@@ -48,6 +48,10 @@
                             <input type="text" value="{{ $user->telephone }}" class="form-control" name="telephone"
                                    id="telephone" placeholder="Telefonszám" @if(!perm_edit_input($user->id)) disabled @endif>
                         </div>
+
+                        <div class="form-group col-md-12">
+                            <p>Kivett szabadnapok: {{ $allHoliday or '' }}</p>
+                        </div>
                     </div>
 
                     {{--cégek--}}

@@ -230,9 +230,14 @@ class AttendanceController extends Controller
      * @param $user_id
      * @return array
      */
-    public function getHoliDaysSimpleUser($year, $month, $company, $user_id) {
+    public function getHoliDaysSimpleUser($year, $month, $company, $user_id, $end = null) {
+
         $start = Carbon::parse("$year-$month-01");
-        $end = $start->copy()->endOfMonth();
+
+        if(is_null($end)) {
+            $end = $start->copy()->endOfMonth();
+        }
+
         $req = ["user_id=$user_id", "company_id=$company->id"];
         $events = Event::get($start, $end, ['privateExtendedProperty' => $req]);
 
@@ -265,45 +270,6 @@ class AttendanceController extends Controller
 
         return $eventRows;
 
-
-
-        $user_events = [];
-        $temp = [];
-        $cheats = [];
-
-//        dd2($events,$user_id);
-
-        // ahol a company és a user_id megegyezik
-        foreach ($events as $event) {
-//            dd2("keresett: $user_id | $company->id, company: " . $event['company_id'] . 'user: ' .  $event['user_id']);
-            if($event['company_id'] ==  $company->id && $event['user_id'] == $user_id) {
-                $user_events[] = $event;
-            }
-        }
-
-//        dd($user_events);
-
-
-        foreach ($user_events as &$u) {
-            $temp[] = $u['start']->format('Y-m-d');
-            if($u["type_id"] == 4)
-                $cheats[] = $u['start']->format('Y-m-d');
-            $diff = $u['start']->diffInDays($u['end']);
-            $added = $u['start']->copy();
-            for($i = 0; $i<$diff; $i++) {
-                $added = $added->copy()->addDay();
-                $temp[] = $added->format('Y-m-d');
-            }
-        }
-
-
-        $ret =  [
-            "holidays" => $temp,
-            "cheats" => $cheats,
-            "sick" => [],
-        ];
-
-        return $ret;
     }
 
     public function checkUserInCompany($user, $company_id) {

@@ -85,5 +85,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('workhours/single-day/{start}', 'checkinController@getSingleDayInteractions');
     Route::get('workhours/date-range/{start}/{end}', 'checkinController@getDateRangeInteractions');
 
+
+
+
+//    Route::get('holidaycount/{year}/{id}', 'HolidayCountController@countUserHoliday');
+
+
+
 });
 
