@@ -11,6 +11,8 @@
                     <a href="/workhours">Teljes lista</a>
                 </h5>
 
+                <a href="/workhours/new" class="h3" style="position: absolute;right: 60px;top: 0;"><i class="fa fa-plus-square-o" aria-hidden="true"></i></a>
+
                 <p class="text-center">Szűrés erre: {{ $search }}</p>
 
 
@@ -98,8 +100,8 @@
                             <td>{{ $data['incoming'] }}</td>
                             <td>{{ $data['outgoing'] }}</td>
                             <td>
-                                <a href="/workhours/edit/{{$data['id']}}">szerk</a>
-                                <button class="btn btn-danger" onclick="confirmDelete({{$data['id']}})" >törlés</button>
+                                <a class="btn btn-success" href="/workhours/edit/{{$data['id']}}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                                <button class="btn btn-danger" onclick="confirmDelete({{$data['id']}})" ><i class="fa fa-ban" aria-hidden="true"></i></button>
                             </td>
                         </tr>
                     @endforeach

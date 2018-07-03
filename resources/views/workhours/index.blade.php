@@ -45,12 +45,18 @@
 
 
                         <div class="row">
-                            <button type="button" class="btn btn-primary" id="incoming">
-                                Érkezés
-                            </button>
-                            <button type="button" class="btn btn-danger" id="outgoing">
-                                Távozás
-                            </button>
+                            <div class="col-md-6">
+                                <button type="button" class="btn btn-primary" id="incoming">
+                                    Érkezés
+                                </button>
+                            </div>
+                            <div class="col-md-6">
+                                <button type="button" class="btn btn-danger" id="outgoing">
+                                    Távozás
+                                </button>
+                            </div>
+
+
                         </div>
 
 

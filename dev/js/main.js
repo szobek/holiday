@@ -93,7 +93,6 @@ $(document).ready(function() {
         allowTimes: h,
         format:'Y-m-d H:i:s',
         onChangeDateTime:function(dp,$input){
-            console.log($input.val(), $input[0].dataset.target);
             $(`#${$input[0].dataset.target}`).val($input.val());
         }
 

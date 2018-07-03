@@ -74,6 +74,10 @@ Route::middleware(['auth'])->group(function () {
 //    Route::resource('workhours', 'WorkhoursController');
     Route::get('workhours', 'checkinController@listAll');
     Route::get('workhours/edit/{id}', 'checkinController@updateView');
+
+    Route::get('workhours/new', 'checkinController@createByAdminView');
+    Route::post('workhours/new', 'checkinController@createByAdmin');
+
     Route::post('workhours/edit/{id}', 'checkinController@updateWorkhour');
     Route::get('workhours/delete/{id}', 'checkinController@deleteWorkhour');
 

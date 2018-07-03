@@ -248,7 +248,45 @@ class checkinController extends Controller
         $wh->delete();
 
         return redirect()->back();
+    }
 
+
+    /**
+     * @author norbi
+     * @return
+     */
+    public function createByAdminView()
+    {
+        if (!cp(18, Auth::user()->permissionList_ids)) {
+            return redirect()->to('/');
+        }
+
+        $users = User::all();
+
+        return view('workhours/create/create', compact('users'));
+    }
+
+    /**
+     * @author norbi
+     * @return
+     */
+    public function createByAdmin(Request $request){
+        if(!cp(18, Auth::user()->permissionList_ids)) {
+            return redirect()->to('/');
+        }
+
+//        dd($request->all());
+
+        WorkHours::create([
+            "user_id" => $request->user,
+            "incoming" => $request->incoming,
+            "outgoing" => $request->outgoing,
+        ]);
+
+        return redirect()->to('/workhours');
 
     }
+
+
+
 }
