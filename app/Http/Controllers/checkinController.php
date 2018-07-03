@@ -14,15 +14,22 @@ class checkinController extends Controller
     public $users;
     public $interactions;
     public $search;
+    public $dates;
 
     function __construct()
     {
         $this->users = [];
         $this->interactions = [];
+        $this->dates = [];
+
     }
 
+    /**
+     * felvisz egy sort az adatbázisba, elmenti a user beérkezés/távozás időpontját
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function createRow(Request $request) {
-
 
         $user = User::find($request->uid);
         $type = ($request->type === 'incoming') ? 'incoming' : 'outgoing' ;
@@ -61,11 +68,18 @@ class checkinController extends Controller
         }
     }
 
+
+    /**
+     * kilistázza a usereket
+     * @return $this
+     */
     public function listAll() {
         $this->interactions = WorkHours::orderBy('created_at', 'asc')->get();
         $wh = $this->formatData();
         $this->search = 'MINDEN';
-        return view('workhours/list/table', compact('wh'))->with('search', $this->search);
+        $this->setThisDate();
+        return $this->showList($wh);
+//        return view('workhours/list/table', compact('wh'))->with(['search' => $this->search]);
     }
 
 
@@ -149,20 +163,18 @@ class checkinController extends Controller
         $end = Carbon::parse($day)->endOfDay();
         $this->interactions = WorkHours::whereBetween('created_at',[$start, $end])->get() ;
         $wh = $this->formatData();
+        $this->setThisDate($day);
         $this->search = "Választott nap: $day";
-        return view('workhours/list/table', compact('wh'))->with('search', $this->search);
+        return $this->showList($wh);
+//        return view('workhours/list/table', compact('wh'))->with('search', $this->search);
     }
 
 
 
     public function getDateRangeInteractions($startDay, $endDay) {
 
-
-        $start = new Carbon($startDay);
-        $end = new Carbon($endDay);
-
-
-//        dd($start ,$end);
+        $start = Carbon::create(explode('-', $startDay)[0], explode('-', $startDay)[1] )->startOfMonth();
+        $end = Carbon::create(explode('-', $startDay)[0], explode('-', $endDay)[1] )->startOfMonth();
 
         if($end < $start) {
             return "Not a valid date";
@@ -170,10 +182,11 @@ class checkinController extends Controller
 
         $this->interactions = WorkHours::whereBetween('created_at',[$start->startOfDay(), $end->endOfDay()])->get() ;
         $wh = $this->formatData();
+        $this->setThisDate($startDay, $endDay);
 
-        $this->search = "$startDay - $endDay";
+        $this->search = $start->format('Y-m-d'). " - " . $end->format('Y-m-d');
+        return $this->showList($wh);
 
-        return view('workhours/list/table', compact('wh'))->with('search', $this->search);
     }
 
 
@@ -184,9 +197,9 @@ class checkinController extends Controller
         $user = User::find($userId);
         $name = (!is_null($user)) ? $user->name : '';
         $this->search = "Felhasználó: $name";
+        $this->setThisDate();
 
-
-        return view('workhours/list/table', compact('wh', 'search'))->with('search', $this->search);
+        return $this->showList($wh);
     }
 
     /**
@@ -301,6 +314,33 @@ class checkinController extends Controller
 
         return redirect()->to('/workhours');
 
+    }
+
+
+    /**
+     * @author norbi
+     * @return
+     */
+    public function setThisDate(string $date1 = null, string $date2 = null):void {
+        if(is_null($date1)) $date1 = date('Y-m-d H:i:s');
+        if(is_null($date2)) $date2 = date('Y-m-d H:i:s');
+
+            //date('Y-m-d H:i:s')
+        $this->dates = [
+            "ys" => Carbon::parse($date1)->year,
+            "ye" => Carbon::parse($date2)->year,
+            "ms" => Carbon::parse($date1)->month,
+            "me" => Carbon::parse($date2)->month,
+        ];
+    }
+
+
+    /**
+     * @param array $wh
+     * @return $this
+     */
+    public function showList(array $wh){
+        return view('workhours/list/table', compact('wh'))->with(['search' => $this->search, "dates" => $this->dates]);
     }
 
 

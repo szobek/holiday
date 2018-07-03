@@ -28,47 +28,52 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12  collapse" id="collapseExample">
-                        <div class="form-group col-md-3">
-                            <label for="start-year">Kezdő év</label>
-                            <select name="year-start" id="start-year" class="form-control">
-                                @foreach(['2018','2019', '2020'] as $y)
-                                    <option value="{{ $y }}">{{ $y }}</option>
-                                @endforeach
-                            </select>
+                        <div class="row">
+                            <div class="form-group col-md-3">
+                                <label for="start-year">Kezdő év</label>
+                                <select name="year-start" id="start-year" class="form-control">
+                                    @foreach(['2018','2019', '2020'] as $y)
+                                        <option @if($y == $dates['ys']) selected @endif value="{{ $y }}">{{ $y }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+
+                            <div class="form-group col-md-3">
+                                <label for="start-year">Kezdő hónap</label>
+                                <select name="month-start" id="" class="form-control">
+                                    @foreach(['01','02','03','04','05','06','07','08','09','10','11','12'] as $d)
+                                        <option @if($d == $dates['ms']) selected @endif value="{{ $d }}">{{ $d }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="form-group col-md-3">
+                                <label for="start-year">Záró év</label>
+                                <select name="year-end" id="" class="form-control">
+                                    @foreach(['2018','2019', '2020'] as $y)
+                                        <option @if($y == $dates['ye']) selected @endif value="{{ $y }}">{{ $y }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="form-group col-md-3">
+                                <label for="start-year">Záró hónap</label>
+                                <select name="month-end" id="" class="form-control">
+                                    @foreach(['01','02','03','04','05','06','07','08','09','10','11','12'] as $d)
+                                        <option @if($d == $dates['me']) selected @endif value="{{ $d }}">{{ $d }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="form-group col-md-12">
+                                <button class="btn btn-success" id="searchRange">Keres</button>
+                            </div>
                         </div>
 
 
-                        <div class="form-group col-md-3">
-                            <label for="start-year">Kezdő hónap</label>
-                            <select name="month-start" id="" class="form-control">
-                                @foreach(['01','02','03','04','05','06','07','08','09','10','11','12'] as $d)
-                                    <option value="{{ $d }}">{{ $d }}</option>
-                                @endforeach
-                            </select>
-                        </div>
 
 
-                        <div class="form-group col-md-3">
-                            <label for="start-year">Záró év</label>
-                            <select name="year-end" id="" class="form-control">
-                                @foreach(['2018','2019', '2020'] as $y)
-                                    <option value="{{ $y }}">{{ $y }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="form-group col-md-3">
-                            <label for="start-year">Záró hónap</label>
-                            <select name="month-end" id="" class="form-control">
-                                @foreach(['01','02','03','04','05','06','07','08','09','10','11','12'] as $d)
-                                    <option value="{{ $d }}">{{ $d }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="form-group col-md-12">
-                            <button class="btn btn-success" id="searchRange">Keres</button>
-                        </div>
                     </div>
 
                 </div>

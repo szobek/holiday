@@ -58,11 +58,22 @@ $(document).ready(function() {
 
     if($('#wh-ci-container').length) {
         $('#incoming').on('click', function() {
-            saveWorkHour('incoming');
+            if(confirm('Menthetem?')) {
+                saveWorkHour('incoming');
+            } else {
+                return false;
+            }
+
         });
 
         $('#outgoing').on('click', function() {
-            saveWorkHour('outgoing');
+
+            if(confirm('Menthetem?')) {
+                saveWorkHour('outgoing');
+            } else {
+                return false;
+            }
+
         });
 
     }
@@ -73,7 +84,7 @@ $(document).ready(function() {
         ms = $('[name="month-start"]').val();
         ye = $('[name="year-end"]').val();
         me = $('[name="month-end"]').val();
-        url = `/workhours/date-range/${ys}-${ms}-01/${ye}-${me}-31`;
+        url = `/workhours/date-range/${ys}-${ms}/${ye}-${me}`;
         // console.log(`/workhours/date-range/${ys}-${ms}-01/${ye}-${me}-31`)
        location.href = url;
     });
@@ -102,16 +113,23 @@ $(document).ready(function() {
     $('.datetimepicker.outgoing ').datetimepicker(pickerConfig);
 
     window.submitUpdateWorkhourForm = () => {
-
         document.querySelector('#whForm').submit();
         return false;
-    }
+    };
 
     window.confirmDelete = (id) => {
         if(confirm('valóban törli??')) {
             location.href = `/workhours/delete/${id}`;
         }
-    }
+    };
+
+    window.checkUserCheckin = () => {
+        let user = $('[name="user"]').val();
+        let prop = (user.length > 0);
+        console.log('a prop', prop);
+        $('#incoming').prop('disabled', !prop);
+        $('#outgoing').prop('disabled', !prop);
+    };
 
 
 });
