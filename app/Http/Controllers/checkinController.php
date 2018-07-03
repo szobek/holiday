@@ -19,9 +19,6 @@ class checkinController extends Controller
     {
         $this->users = [];
         $this->interactions = [];
-
-
-
     }
 
     public function createRow(Request $request) {
@@ -86,7 +83,7 @@ class checkinController extends Controller
                 "incomingDate" => (is_null($w->incoming)) ? '' : $incoming::parse($w->incoming)->format('Y-m-d H:i:s'),
                 "outgoing" => (is_null($w->outgoing)) ? '' : $outgoing::parse($w->outgoing)->format('H:i:s'),
                 "outgoingDate" => (is_null($w->outgoing)) ? '' : $outgoing::parse($w->outgoing)->format('Y-m-d H:i:s'),
-                "day" => Carbon::parse($w->created_at)->format('Y-m-d'),
+                "day" => Carbon::parse($w->incoming)->format('Y-m-d'),
                 "id" => $w->id
             ];
         }
@@ -228,7 +225,7 @@ class checkinController extends Controller
             "outgoing" => $request->outgoing,
         ]);
 
-        return redirect()->back();
+        return redirect()->to('/workhours');
     }
 
     /**
@@ -275,13 +272,32 @@ class checkinController extends Controller
             return redirect()->to('/');
         }
 
-//        dd($request->all());
 
-        WorkHours::create([
-            "user_id" => $request->user,
-            "incoming" => $request->incoming,
-            "outgoing" => $request->outgoing,
-        ]);
+        $user = User::find($request->user);
+        if(!is_null($user)) {
+
+            $start = Carbon::parse($request->incoming)->startOfDay();
+            $end = Carbon::parse($request->incoming)->endOfDay();
+
+            $row = WorkHours::where('user_id', $user->id)->whereBetween('incoming', array($start, $end))->orWhereBetween('outgoing', array($start, $end))->first();
+            if(is_null($row)) {
+
+                WorkHours::create([
+                    "user_id" => $user->id,
+                    "incoming" => $request->incoming,
+                    "outgoing" => $request->outgoing,
+                ]);
+
+
+            } else {
+                return response()->json(['success' => false, 'message' => 'sikertelen felvitel, már lett rögzítve ilyen sor']);
+
+            }
+
+
+        } else {
+            return response()->json(['success' => false, 'message' => 'sikertelen felvitel, nincs ilyen user']);
+        }
 
         return redirect()->to('/workhours');
 

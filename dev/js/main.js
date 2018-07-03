@@ -102,9 +102,7 @@ $(document).ready(function() {
     $('.datetimepicker.outgoing ').datetimepicker(pickerConfig);
 
     window.submitUpdateWorkhourForm = () => {
-        if($('[name="incoming"]').val() === '' || $('[name="outgoing"]').val() === '') {
-            alert('hibás adatok');
-        }
+
         document.querySelector('#whForm').submit();
         return false;
     }
