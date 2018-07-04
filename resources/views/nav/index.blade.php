@@ -38,6 +38,7 @@
                             <a class="nav-link" href="/user/new">Új felhasználó</a>
                         @endif
                         <div class="dropdown-divider"></div>
+                        <a class="nav-link" href="/workhours">Jelenléti</a>
 
                     </div>
                 </li>
@@ -58,7 +59,7 @@
                     <a class="nav-link" href="/permissions">Jogok</a>
 
                     <a class="nav-link" href="/nonworking">Ünnepnapok</a>
-                    <a class="nav-link" href="/workhours">Jelenléti</a>
+
 
                     <div class="dropdown-divider"></div>
 
