@@ -4,7 +4,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 
-Route::get('/testwhere', 'TestController@testWhere');
+Route::get('/test', function() {
+
+
+
+});
 
 Route::get('/hash/{string}', function ($string) {
     return print bcrypt($string);

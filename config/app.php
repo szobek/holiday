@@ -243,5 +243,7 @@ return [
 
     ],
 
+    "disableCheckInUrl" => "vh.i234.me"
+
 
 ];

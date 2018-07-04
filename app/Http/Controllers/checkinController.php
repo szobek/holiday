@@ -25,11 +25,24 @@ class checkinController extends Controller
     }
 
     /**
+     * @author norbi
+     * @return
+     */
+    public function checkinView(){
+        if($_SERVER['SERVER_NAME'] !== config('app.disableCheckInUrl')) { // ha kívülről próbálják elérni, akkor 404
+            $users = \App\User::all();
+            return view('workhours/index', compact('users'));
+        } else {
+            abort(404);
+        }
+    }
+
+    /**
      * felvisz egy sort az adatbázisba, elmenti a user beérkezés/távozás időpontját
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function createRow(Request $request) {
+    public function checkIn(Request $request) {
 
         $user = User::find($request->uid);
         $type = ($request->type === 'incoming') ? 'incoming' : 'outgoing' ;
