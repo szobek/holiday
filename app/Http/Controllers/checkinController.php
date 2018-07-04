@@ -187,7 +187,7 @@ class checkinController extends Controller
     public function getDateRangeInteractions($startDay, $endDay) {
 
         $start = Carbon::create(explode('-', $startDay)[0], explode('-', $startDay)[1] )->startOfMonth();
-        $end = Carbon::create(explode('-', $startDay)[0], explode('-', $endDay)[1] )->startOfMonth();
+        $end = Carbon::create(explode('-', $startDay)[0], explode('-', $endDay)[1] )->endOfMonth();
 
         if($end < $start) {
             return "Not a valid date";

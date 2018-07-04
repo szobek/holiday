@@ -30,3 +30,6 @@ Ez a szabadság nyilvántartó
     + Ünnepnapok felvitele
     + ledolgozós napok felvitele
     
+* Jogosultsági rendszer
+    + szétbontva metódusokra azaz funkciókra
+    
