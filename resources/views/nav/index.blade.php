@@ -45,6 +45,22 @@
 
             @endif
 
+            <li class="nav-item  dropdown">
+
+                <a class="nav-link dropdown-toggle" href="#" id="messageDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    Üzenetek
+                </a>
+                <div class="dropdown-menu" aria-labelledby="messageDropdown">
+
+                    <a href="/messages" class="nav-link">Lista</a>
+                    <a href="/messages/new" class="nav-link">Új üzenet</a>
+
+                    <div class="dropdown-divider"></div>
+
+                </div>
+            </li>
+
 
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="settingsDropdown" role="button" data-toggle="dropdown"

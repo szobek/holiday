@@ -14,13 +14,14 @@ class Conversations extends Model
     protected $fillable = [
         'sender_id',
         'receiver_id',
+        'title'
     ];
 
 
 
     public $appends = [
         'sender',
-        'receiver'
+        'receiver',
     ];
 
 
@@ -50,7 +51,7 @@ class Conversations extends Model
                 "name" => $message->receiver->name,
                 "id" => $message->receiver->id,
             ] ;
-            $msg->message = $message->content;
+            $msg->content = $message->content;
             $msg->readed = $message->receiver_read;
             $msg->date = $message->created_at;
             $msg->by = ($message->sender->id === Auth::user()->id) ? 'sender' : 'receiver';

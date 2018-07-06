@@ -91,9 +91,10 @@ Route::middleware(['auth'])->group(function () {
 
 
     Route::get('messages','MessageController@getConversation');
-    Route::get('message','MessageController@getMessagesByConversationId');
-    Route::get('messages/new','MessageController@createConversation');
-    Route::get('messages/answer','MessageController@insertMessageToConversation');
+    Route::get('message/{id}','MessageController@getMessagesByConversationId');
+    Route::get('messages/new','MessageController@createConversationView');
+    Route::post('messages/new','MessageController@createConversation');
+    Route::post('messages/answer','MessageController@insertMessageToConversation');
 
 
 //    Route::get('workhours/date-range/{start}/{end}', 'ConversationController@listView');

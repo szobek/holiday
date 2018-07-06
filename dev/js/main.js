@@ -73,10 +73,9 @@ $(document).ready(function() {
             } else {
                 return false;
             }
-
         });
-
     }
+
 
     $(document).on('click','#searchRange', () => {
         let ys, ye, ms, me, url;
@@ -87,6 +86,8 @@ $(document).ready(function() {
         url = `/workhours/date-range/${ys}-${ms}/${ye}-${me}`;
         // console.log(`/workhours/date-range/${ys}-${ms}-01/${ye}-${me}-31`)
        location.href = url;
+    }).on('click', 'sendMessage', () => {
+        console.log('chatform', $('[name="chatForm"]'));
     });
 
 
