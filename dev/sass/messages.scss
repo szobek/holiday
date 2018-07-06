@@ -1,0 +1,15 @@
+.message-detail-container {
+  .message-list {
+    height: 35vh;
+    overflow-y: scroll;
+    color: $font-base-color;
+    box-sizing: border-box;
+    padding: 0 1rem;
+    .item {
+      font-size: 0.8rem;
+    }
+  }
+  .message-send {
+
+  }
+}

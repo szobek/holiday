@@ -7,6 +7,7 @@
         @include('elements',["css" => true])
         <title>Calendar | @yield('title')</title>
         <meta name="csrf-token" content="{{ csrf_token() }}">
+        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 
         <link rel="icon" href="/assets/logo.png" type="image/png">
         <link rel="shortcut icon" href="/assets/logo.png" type="image/png">

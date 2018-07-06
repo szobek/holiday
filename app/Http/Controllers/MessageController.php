@@ -34,6 +34,7 @@ class MessageController extends Controller
             $this->conversations[] = $this->formatConversation($cas);
         }
 
+
         return view('conversations/list')->with('conversation', $this->conversations);
 
     }
@@ -90,6 +91,7 @@ class MessageController extends Controller
      */
     public function createConversationView(){
         $this->conversation = $this->createEmptyConversation();
+
         return view('conversations/detail')->with('conversation', $this->conversation)->with('users', User::all()->toArray());
     }
 
@@ -128,6 +130,10 @@ class MessageController extends Controller
         $data = new \stdClass();
         $data->sender = Auth::user()->id;
 
+
+        if(empty($request->msgContent)) {
+            return redirect()->back();
+        }
         $data->content = $request->msgContent;
 
 
