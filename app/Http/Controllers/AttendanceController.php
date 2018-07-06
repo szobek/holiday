@@ -53,9 +53,8 @@ class AttendanceController extends Controller
          * lekéri a userek szabadságait adott évre és hónapra
          */
         $temp = self::getHoliDaysSimpleUser($year, $month, $company, $user_id);
-//        dd($temp);
 
-        $start_day = Carbon::parse("$year-$month-01");
+        $start_day = \Carbon\Carbon::create($year, $month)->startOfMonth();
         $end_day = $start_day->copy()->endOfMonth();
         $tempDay = $start_day->copy();
 
@@ -127,6 +126,16 @@ class AttendanceController extends Controller
 //        dd($items);
 
         return view('pdf.jelenleti', compact('pdfData','user', 'company', 'year', 'month','years', 'months'));
+
+    }
+    
+    
+    
+    /** 
+     * @author norbi
+     * @return 
+     */
+    public function dayType(){
 
     }
 
