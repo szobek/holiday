@@ -32,4 +32,10 @@ Ez a szabadság nyilvántartó
     
 * Jogosultsági rendszer
     + szétbontva metódusokra azaz funkciókra
+
+* Üzenetek
+    + új üzenet/beszélgetés
+    + válasz üzenetre
+    
+    
     
