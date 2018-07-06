@@ -90,6 +90,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('workhours/date-range/{start}/{end}', 'checkinController@getDateRangeInteractions');
 
 
+    Route::get('messages','MessageController@getConversation');
+    Route::get('message','MessageController@getMessagesByConversationId');
+    Route::get('messages/new','MessageController@createConversation');
+    Route::get('messages/answer','MessageController@insertMessageToConversation');
 
 
 //    Route::get('workhours/date-range/{start}/{end}', 'ConversationController@listView');

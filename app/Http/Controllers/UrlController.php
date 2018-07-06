@@ -6,10 +6,13 @@ use App\Companies;
 use App\HolidayTypes;
 use App\Mail\HolidayMaked;
 use App\Mail\RegistrationByUserValidate;
+use App\Messages;
 use App\NonWorking;
 use App\User;
 use Google_Service_Calendar_EventExtendedProperties;
+use Illuminate\Mail\Message;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 use \PDF;
@@ -191,6 +194,7 @@ class UrlController extends Controller
     }
 
     public function usersProfile($id = null) {
+
         if($id == null) abort(404);
         $uc = new UserController();
         return $uc->userEditView($id);
