@@ -3,17 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Companies;
-use App\Holiday;
-use App\Mail\RegistrationByUserValidate;
-use App\Permission;
 use App\User;
 use App\UserCompanies;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
