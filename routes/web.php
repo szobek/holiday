@@ -90,6 +90,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('workhours/date-range/{start}/{end}', 'checkinController@getDateRangeInteractions');
 
 
+//    ajax url's
+    Route::get('/api/messages/all','MessageController@apiGetConversations');
+
+    Route::get('/api/message/{id}','MessageController@getConversation');
+    Route::post('/api/messages/new','MessageController@getConversation');
+    Route::post('/api/messages/answer','MessageController@getConversation');
+
     Route::get('messages','MessageController@getConversation');
     Route::get('message/{id}','MessageController@getMessagesByConversationId');
     Route::get('messages/new','MessageController@createConversationView');

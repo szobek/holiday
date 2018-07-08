@@ -133,6 +133,9 @@ $(document).ready(function() {
     };
 
 
+    window.chat = new Chat();
+
+
 });
 
 $('#company-selector').on('change', function () {
@@ -157,5 +160,81 @@ let saveWorkHour = (type) => {
     })
 };
 
+
+class Chat {
+
+    constructor() {
+        this.conversation = {
+            messages: [],
+            conversationData: {
+                created: '',
+                id: '',
+                title: '',
+                sender: {
+                    name: '',
+                    id: '',
+                },
+                receiver: {
+                    name: '',
+                    id: '',
+                },
+            }
+        };
+
+        this.getAllEndpoint = '/api/messages/all';
+        this.getSingleEndpoint = '';
+        this.saveEndpoint = '';
+        this.createEndpoint = '';
+
+
+        this.url = window.location.pathname;
+
+
+        switch (this.url) {
+            case "/messages":
+                this.getAllconversations();
+                break;
+            case "/messages/new":
+
+                break;
+            case "/messages/answer":
+
+                break;
+            case "/message/":
+
+                break;
+
+
+        }
+
+    }
+
+    getAllconversations() {
+        $.ajax({
+            url: this.getAllEndpoint,
+            method: 'get'
+        }).done((res) => {
+            console.log('done run')
+            this.listConversations(res);
+        });
+    }
+
+    conversationsTemplate(conversation) {
+        return `<a href="/message/${conversation.conversationData.id}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                    ${conversation.conversationData.receiver.name} - ${conversation.conversationData.title}
+                    <span class="badge badge-primary badge-pill">${conversation.messages.length}</span>
+                </a>`;
+    }
+
+    listConversations(res) {
+        let conversations = [];
+        res.map((conversation) => {
+            conversations.push(this.conversationsTemplate(conversation))
+        });
+
+        $('#conversation-list').html('').append(...conversations);
+    }
+
+}
 
 

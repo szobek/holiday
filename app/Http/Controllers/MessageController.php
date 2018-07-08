@@ -28,20 +28,23 @@ class MessageController extends Controller
      * @return
      */
     public function getConversation(){
+
+        return view('conversations/list');
+
+    }
+
+    /**
+     * @author norbi
+     * @return
+     */
+    public function apiGetConversations(){
         $c = new Conversations();
         $ca = $c->userConversations(Auth::user()->id); // összes beszélgetésem
         foreach ($ca as $cas) {
             $this->conversations[] = Conversations::formatConversation($cas);
         }
-
-
-        return view('conversations/list')->with('conversation', $this->conversations);
-
+        return $this->conversations;
     }
-    
-    
-
-
 
     /**
      * @author norbi
