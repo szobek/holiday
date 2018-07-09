@@ -103,7 +103,15 @@ class MessageController extends Controller
             'content' => $data->content,
         ]);
 
-        return redirect()->to("message/".$c->id);
+        return response()->json([
+            'status' => true,
+            'code' => 1,
+            'data' => [
+                'url' => "/message/".$c->id,
+            ],
+
+            ]);
+//        return redirect()->to("message/".$c->id);
     }
 
 
@@ -138,7 +146,17 @@ class MessageController extends Controller
             'content' => $data->content,
         ]);
 
-        return redirect()->back();
+        $conversationDb = Conversations::find($data->cid);
+        $this->conversation = Conversations::formatConversation($conversationDb);
+        return response()->json([
+            'status' => true,
+            'code' => 2,
+            'data' => [
+                'conversation' => $this->conversation
+            ],
+
+        ]);
+//        return redirect()->back();
     }
     
     
@@ -150,10 +168,42 @@ class MessageController extends Controller
         $conversation = Conversations::find($id);
         if(is_null($conversation))
             dd('nincs ilyen beszélgetés');
-        $this->conversation = Conversations::formatConversation($conversation);
 
-        return view('conversations/detail')->with('conversation', $this->conversation);
+        return view('conversations/detail');
 
     }
+
+    /**
+     * @author norbi
+     * @return
+     */
+    public function getApiMessagesByConversationId($id){
+        $conversation = Conversations::find($id);
+        if(is_null($conversation)) {
+            return response()->json(['error' => 'Nincs ilyen beszélgetés']);
+        }
+
+        $this->conversation = Conversations::formatConversation($conversation);
+        return response()->json(['conversation' => $this->conversation]);
+    }
+
+    /**
+     * @author norbi
+     * @return
+     */
+    public function setReadStatusOfMessage($id){
+
+    }
+
+
+    /**
+     * @author norbi
+     * @return
+     */
+    public function getApiUsers(){
+        return response()->json(['users' => User::where('id','!=',Auth::user()->id)->get()->toArray()]);
+    }
+
+
 
 }

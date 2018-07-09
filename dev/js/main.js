@@ -164,6 +164,9 @@ let saveWorkHour = (type) => {
 class Chat {
 
     constructor() {
+
+        this.users = [];
+
         this.conversation = {
             messages: [],
             conversationData: {
@@ -182,31 +185,48 @@ class Chat {
         };
 
         this.getAllEndpoint = '/api/messages/all';
-        this.getSingleEndpoint = '';
-        this.saveEndpoint = '';
-        this.createEndpoint = '';
+        this.getSingleEndpoint = '/api/message';
+        this.formEndpoint = '';
+        this.getUsersEndpoint = '';
 
 
         this.url = window.location.pathname;
 
+        this.handleUrl();
 
-        switch (this.url) {
-            case "/messages":
+        $('#send-message').on('click', () => {
+            console.log('form send');
+            this.sendFormData();
+        });
+
+
+
+    }
+
+    handleUrl() {
+        switch (true) {
+            case /\/messages$/.test(this.url):
+                console.log('list');
                 this.getAllconversations();
                 break;
-            case "/messages/new":
-
+            case /\/messages\/new/.test(this.url):
+                console.log('new');
+                this.formEndpoint = '/api/messages/new';
+                this.listUsers();
+                $('#message-list-container').remove();
                 break;
-            case "/messages/answer":
-
+            case /\/message\/[\d+]/.test(this.url):
+                var r = new RegExp(/[\d]+/);
+                var b = r.exec(this.url);
+                console.log('single');
+                this.getSingleConversation(b[0]);
                 break;
-            case "/message/":
-
+            default:
+                console.log('default');
                 break;
 
 
         }
-
     }
 
     getAllconversations() {
@@ -233,6 +253,99 @@ class Chat {
         });
 
         $('#conversation-list').html('').append(...conversations);
+    }
+
+    getSingleConversation(id) {
+        const url = `${this.getSingleEndpoint}/${id}`;
+        $.ajax({
+            url,
+            method: 'get'
+        }).done((res) => {
+            console.log('done run');
+            Object.assign(this.conversation, res.conversation);
+            console.log('this', this.conversation, res);
+            this.showSingleConversation();
+            this.setAnswerFormData();
+        });
+    }
+
+    listUsers() {
+        $.ajax({
+            url: '/api/users'
+        }).done( (users) => {
+            this.users = users;
+            let usersData = this.users.users.map(user => `<option value="${user['id']}">${user['name']}</option>`);
+            $('[name="receiver"]').append(...usersData)
+
+        });
+    }
+
+
+    messageTemplate(message) {
+        return  `<li class=" ${(message.by === 'sender') ? 'text-left' : 'text-right' } item">
+                <p>
+                    <small>${new Date(message.date.date).toLocaleString()}</small>
+                    <br>
+                    ${message.content}
+                </p>
+            </li>`;
+    }
+    
+    showSingleConversation() {
+        let messages = this.conversation.messages.map(message => this.messageTemplate(message) );
+        $('#message-list').html('').append(...messages);
+        document.querySelector('#message-list-container').scrollTop = document.querySelector('#message-list-container').scrollHeight;
+        $('[name="msgContent"]').val('');
+        this.setHtmlData();
+
+    }
+
+
+    sendFormData() {
+        let formData = {};
+        let data = $('[name="chat-form"]').serializeArray();
+        $.each( data, function( i, field ) {
+            formData[field.name] = field.value;
+        });
+        $.ajax({
+            url: this.formEndpoint,
+            data: formData,
+            method: 'post',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        }).done(
+            (res)=>{
+
+                this.handleResponse(res);
+
+            });
+    }
+
+
+    setAnswerFormData() {
+        this.formEndpoint = '/api/messages/answer';
+        $('#user-list, #title-container').remove();
+        $('[name="cid"]').val(this.conversation.conversationData.id);
+    }
+
+    handleResponse(res) {
+        switch(res.code) {
+            case 1:
+                location.href = res.data.url;
+                break;
+            case 2:
+                this.conversation=res.data.conversation;
+                this.showSingleConversation();
+                break;
+        }
+
+    }
+
+    setHtmlData() {
+        $('#conversation-date').html(new Date(this.conversation.conversationData.created.date).toLocaleString());
+        $('#contact').html((window.me === this.conversation.conversationData.sender.id) ? this.conversation.conversationData.receiver.name : this.conversation.conversationData.sender.name);
+
     }
 
 }

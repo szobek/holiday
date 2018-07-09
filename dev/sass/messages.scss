@@ -1,21 +1,30 @@
-<<<<<<< HEAD
-
-=======
 $font-base-color: #4f4f4f;
->>>>>>> origin/message_with_ajax_refactor
 
 .message-detail-container {
-  .message-list {
-    height: 35vh;
-    overflow-y: scroll;
-    color: $font-base-color;
-    box-sizing: border-box;
-    padding: 0 1rem;
-    .item {
-      font-size: 0.8rem;
-    }
+
+
+  #message-list-container {
+    box-shadow: inset 0 5px 5px -5px #4f4f4f;
+
   }
+
+  .message-list {
+     height: 35vh;
+     overflow-y: scroll;
+     color: $font-base-color;
+     box-sizing: border-box;
+     padding: 0 1rem;
+     .item {
+       font-size: 0.8rem;
+     }
+   }
+
+
   .message-send {
 
   }
+
+  /*
+
+   */
 }
