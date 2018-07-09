@@ -37,6 +37,7 @@ Ez a szabadság nyilvántartó
     + új üzenet/beszélgetés
     + válasz üzenetre
     + üzenet lista frissítés 5s-ként
+    + üzenet küldés:  ctrl+enter
     
     
     
