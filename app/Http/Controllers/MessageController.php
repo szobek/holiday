@@ -98,19 +98,40 @@ class MessageController extends Controller
     public function createConversation(Request $request) {
 
 //        dd($request->all());
+
+
+        if(empty($request->receiver)) {
+            dd('nincs címzett');
+        }
+
+        if(empty($request->title)) {
+            dd('nincs title');
+        }
+
+        if(empty($request->msgContent)) {
+            dd('nincs üzenet');
+        }
+
+
+
+
+
         $data = new \stdClass();
         $data->sender = Auth::user()->id;
         $data->receiver = User::find($request->receiver);
         $data->content = $request->msgContent;
+        $data->title = $request->title;
 
 
         if(is_null($data->receiver))
-            return abort(404);
+            dd('nincs ilyen user a címzettnél');
+
+
 
         $c = Conversations::create([
             "sender_id" => $data->sender,
             "receiver_id" => $data->receiver->id,
-            "title" => $request->title
+            "title" => $data->title
         ]);
 
         $m = Messages::create([
