@@ -18,14 +18,11 @@ class Workhours extends Migration
         Schema::create('workhours', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id');
-            $table->string('type'); // hazamenetel vagy bejött
+            $table->dateTime('incoming'); // bejövetel
+            $table->dateTime('outgoing'); // hazamenetel
             $table->timestamps();
         });
 
-        Schema::create('user_work_hours', function (Blueprint $table) {
-            $table->increments('user_id');
-            $table->integer('work_hours_id');
-        });
 
 
     }
@@ -38,6 +35,5 @@ class Workhours extends Migration
     public function down()
     {
         Schema::dropIfExists('workhours');
-        Schema::dropIfExists('user_work_hours');
     }
 }

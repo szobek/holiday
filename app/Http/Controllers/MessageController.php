@@ -28,61 +28,22 @@ class MessageController extends Controller
      * @return
      */
     public function getConversation(){
-        $c = new Conversations();
-        $ca = $c->userConversations(Auth::user()->id); // összes beszélgetésem
-        foreach ($ca as $cas) {
-            $this->conversations[] = $this->formatConversation($cas);
-        }
 
+        return view('conversations/list');
 
-        return view('conversations/list')->with('conversation', $this->conversations);
-
-    }
-    
-    
-    /** 
-     * @author norbi
-     * @return 
-     */
-    public function formatConversation($conversationParam) {
-        $conversation = new \stdClass();
-        $conversation->conversationData = new \stdClass();
-        $conversation->conversationData->created = $conversationParam->created_at;
-        $conversation->conversationData->id = $conversationParam->id;
-        $conversation->conversationData->title = $conversationParam->title;
-        $conversation->conversationData->sender = [
-            "name" => $conversationParam->sender->name,
-            "id" => $conversationParam->sender->id,
-        ];
-        $conversation->conversationData->receiver = [
-            "name" => $conversationParam->receiver->name,
-            "id" => $conversationParam->receiver->id,
-        ];
-        $conversation->messages = $conversationParam->getMessages();
-
-        return $conversation;
     }
 
     /**
      * @author norbi
      * @return
      */
-    public function createEmptyConversation(){
-        $conversation = new \stdClass();
-        $conversation->conversationData = new \stdClass();
-        $conversation->conversationData->created = '';
-        $conversation->conversationData->id = 0;
-        $conversation->conversationData->sender = [
-            "name" => '',
-            "id" => '',
-        ];
-        $conversation->conversationData->receiver = [
-            "name" => '',
-            "id" => '',
-        ];
-        $conversation->messages = [];
-
-        return $conversation;
+    public function apiGetConversations(){
+        $c = new Conversations();
+        $ca = $c->userConversations(Auth::user()->id); // összes beszélgetésem
+        foreach ($ca as $cas) {
+            $this->conversations[] = Conversations::formatConversation($cas);
+        }
+        return $this->conversations;
     }
 
     /**
@@ -90,7 +51,7 @@ class MessageController extends Controller
      * @return
      */
     public function createConversationView(){
-        $this->conversation = $this->createEmptyConversation();
+        $this->conversation = Conversations::createEmptyConversation();
 
         return view('conversations/detail')->with('conversation', $this->conversation)->with('users', User::all()->toArray());
     }
@@ -189,12 +150,10 @@ class MessageController extends Controller
         $conversation = Conversations::find($id);
         if(is_null($conversation))
             dd('nincs ilyen beszélgetés');
-        $this->conversation = $this->formatConversation($conversation);
+        $this->conversation = Conversations::formatConversation($conversation);
 
         return view('conversations/detail')->with('conversation', $this->conversation);
 
-
-        
     }
 
 }

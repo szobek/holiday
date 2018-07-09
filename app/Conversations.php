@@ -64,6 +64,52 @@ class Conversations extends Model
      * @author norbi
      * @return
      */
+    public static function createEmptyConversation(){
+        $conversation = new \stdClass();
+        $conversation->conversationData = new \stdClass();
+        $conversation->conversationData->created = '';
+        $conversation->conversationData->id = 0;
+        $conversation->conversationData->sender = [
+            "name" => '',
+            "id" => '',
+        ];
+        $conversation->conversationData->receiver = [
+            "name" => '',
+            "id" => '',
+        ];
+        $conversation->messages = [];
+
+        return $conversation;
+    }
+
+    /**
+     * @author norbi
+     * @return
+     */
+    public static function formatConversation($conversationParam) {
+        $conversation = new \stdClass();
+        $conversation->conversationData = new \stdClass();
+        $conversation->conversationData->created = $conversationParam->created_at;
+        $conversation->conversationData->id = $conversationParam->id;
+        $conversation->conversationData->title = $conversationParam->title;
+        $conversation->conversationData->sender = [
+            "name" => $conversationParam->sender->name,
+            "id" => $conversationParam->sender->id,
+        ];
+        $conversation->conversationData->receiver = [
+            "name" => $conversationParam->receiver->name,
+            "id" => $conversationParam->receiver->id,
+        ];
+        $conversation->messages = $conversationParam->getMessages();
+
+        return $conversation;
+    }
+
+
+    /**
+     * @author norbi
+     * @return
+     */
     public function getSenderAttribute(){
         return $this->getSender()->first();
     }
