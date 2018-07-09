@@ -2,6 +2,8 @@ $font-base-color: #4f4f4f;
 $loader-border: #000;
 
 
+
+
 .lds-dual-ring {
   display: inline-block;
   width: 64px;
@@ -32,6 +34,10 @@ $loader-border: #000;
 }
 
 .message-detail-container {
+
+  textarea {
+    resize: none;
+  }
 
 
   #message-list-container {

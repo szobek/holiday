@@ -27,17 +27,8 @@
             <div class="col-12 col-md-6 offset-md-3 mt-3">
                 <div class="row">
                     <div class="col-6">
-                        <h3 id="contact">
-
-                            {{--@if($conversation->conversationData->sender['id'] === \Illuminate\Support\Facades\Auth::user()->id)
-                                {{ $conversation->conversationData->receiver['name'] }}
-                            @else
-                                {{ $conversation->conversationData->sender['name'] }}
-                            @endif--}}
-                        </h3>
-                        <h6>
-                            {{--{{ $conversation->conversationData->title or '' }} --}}
-                        </h6>
+                        <h3 id="contact"></h3>
+                        <h6></h6>
                     </div>
                     <div class="col-6 text-right">
                         <small style="font-size: 0.7rem;" id="conversation-date"></small>
@@ -71,6 +62,10 @@
                                 <input type="hidden" name="cid">
                                 <textarea class="form-control mb-5" name="msgContent" id="" cols="30"
                                           rows="10"></textarea>
+                                <div class="form-group">
+                                    <input type="checkbox" name="autoscroll" id="autoscroll" >
+                                    <label for="autoscroll">Autoscroll</label>
+                                </div>
                                 <button type="button" class="btn btn-success" id="send-message">Küldés</button>
                             </form>
 

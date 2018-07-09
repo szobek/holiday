@@ -36,6 +36,7 @@ Ez a szabadság nyilvántartó
 * Üzenetek
     + új üzenet/beszélgetés
     + válasz üzenetre
+    + üzenet lista frissítés 5s-ként
     
     
     

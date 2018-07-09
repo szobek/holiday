@@ -41,7 +41,7 @@ class MessageController extends Controller
         $c = new Conversations();
         $ca = $c->userConversations(Auth::user()->id); // összes beszélgetésem
         foreach ($ca as $cas) {
-            $this->conversations[] = Conversations::formatConversation($cas);
+            $this->conversations[] = Conversations::formatConversation($cas, false);
         }
         return $this->conversations;
     }

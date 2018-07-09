@@ -86,7 +86,7 @@ class Conversations extends Model
      * @author norbi
      * @return
      */
-    public static function formatConversation($conversationParam) {
+    public static function formatConversation($conversationParam, $getMessages = true) {
         $conversation = new \stdClass();
         $conversation->conversationData = new \stdClass();
         $conversation->conversationData->created = $conversationParam->created_at;
@@ -100,7 +100,15 @@ class Conversations extends Model
             "name" => $conversationParam->receiver->name,
             "id" => $conversationParam->receiver->id,
         ];
-        $conversation->messages = $conversationParam->getMessages();
+
+        if($getMessages) {
+            $messages = $conversationParam->getMessages();
+            $conversation->messages = $conversationParam->getMessages();
+            $conversation->conversationData->messagesLength = count($messages);
+        }
+        else
+            $conversation->conversationData->messagesLength = count($conversationParam->getMessages());
+
 
         return $conversation;
     }

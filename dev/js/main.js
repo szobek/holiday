@@ -199,8 +199,19 @@ class Chat {
             this.sendFormData();
         });
 
+        this.timer = null;
+        this.autoScroll = true;
+        document.getElementById("autoscroll").checked = true;
+
+        $('#autoscroll').on('change', this.handleAutoScroll.bind(this));
 
 
+
+    }
+
+    handleAutoScroll(e) {
+        let c = document.getElementById("autoscroll").checked;
+        this.autoScroll = c;
     }
 
     handleUrl() {
@@ -220,6 +231,7 @@ class Chat {
                 var b = r.exec(this.url);
                 console.log('single');
                 this.getSingleConversation(b[0]);
+                this.runRefresh();
                 break;
             default:
                 console.log('default');
@@ -242,9 +254,11 @@ class Chat {
     }
 
     conversationsTemplate(conversation) {
+
+        let receiver = (conversation.conversationData.sender.id === window.me) ? conversation.conversationData.receiver.name : conversation.conversationData.sender.name;
         return `<a href="/message/${conversation.conversationData.id}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                    ${conversation.conversationData.receiver.name} - ${conversation.conversationData.title}
-                    <span class="badge badge-primary badge-pill">${conversation.messages.length}</span>
+                    ${receiver} - ${conversation.conversationData.title}
+                    <span class="badge badge-primary badge-pill">${conversation.conversationData.messagesLength}</span>
                 </a>`;
     }
 
@@ -265,21 +279,22 @@ class Chat {
             method: 'get'
         }).done((res) => {
             $('.lds-dual-ring').hide();
-            console.log('done run');
             Object.assign(this.conversation, res.conversation);
-            console.log('this', this.conversation, res);
             this.showSingleConversation();
             this.setAnswerFormData();
         });
     }
 
     listUsers() {
+        $('.lds-dual-ring').show();
         $.ajax({
             url: '/api/users'
         }).done( (users) => {
             this.users = users;
             let usersData = this.users.users.map(user => `<option value="${user['id']}">${user['name']}</option>`);
+
             $('[name="receiver"]').append(...usersData)
+            $('.lds-dual-ring').hide();
 
         });
     }
@@ -298,8 +313,9 @@ class Chat {
     showSingleConversation() {
         let messages = this.conversation.messages.map(message => this.messageTemplate(message) );
         $('#message-list').html('').append(...messages);
-        document.querySelector('#message-list-container').scrollTop = document.querySelector('#message-list-container').scrollHeight;
-        $('[name="msgContent"]').val('');
+        if(this.autoScroll)
+            document.querySelector('#message-list-container').scrollTop = document.querySelector('#message-list-container').scrollHeight;
+
         this.setHtmlData();
 
     }
@@ -342,6 +358,7 @@ class Chat {
             case 2:
                 this.conversation=res.data.conversation;
                 this.showSingleConversation();
+                $('[name="msgContent"]').val('');
                 break;
         }
 
@@ -351,6 +368,13 @@ class Chat {
         $('#conversation-date').html(new Date(this.conversation.conversationData.created.date).toLocaleString());
         $('#contact').html((window.me === this.conversation.conversationData.sender.id) ? this.conversation.conversationData.receiver.name : this.conversation.conversationData.sender.name);
 
+    }
+
+    runRefresh() {
+        clearInterval(this.timer);
+        setInterval(()=> {
+            this.getSingleConversation(this.conversation.conversationData.id);
+        },5000);
     }
 
 }
