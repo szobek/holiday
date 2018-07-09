@@ -205,6 +205,12 @@ class Chat {
 
         $('#autoscroll').on('change', this.handleAutoScroll.bind(this));
 
+        $(document).on('keydown', (e) => {
+            if(e.ctrlKey && e.key === 'Enter') {
+                console.log('ctrl+enter');
+                this.sendFormData();
+            }
+        })
 
 
     }
@@ -376,6 +382,7 @@ class Chat {
             this.getSingleConversation(this.conversation.conversationData.id);
         },5000);
     }
+
 
 }
 
