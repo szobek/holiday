@@ -16,6 +16,8 @@
 
 @section('content')
 
+    <div class="lds-dual-ring"></div>
+
     <div class="container">
         <div class="row">
             <div class="col-12 mt-3">

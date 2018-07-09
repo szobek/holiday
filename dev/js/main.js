@@ -230,12 +230,14 @@ class Chat {
     }
 
     getAllconversations() {
+        $('.lds-dual-ring').show();
         $.ajax({
             url: this.getAllEndpoint,
             method: 'get'
         }).done((res) => {
-            console.log('done run')
+            console.log('done run');
             this.listConversations(res);
+            $('.lds-dual-ring').hide();
         });
     }
 
@@ -256,11 +258,13 @@ class Chat {
     }
 
     getSingleConversation(id) {
+        $('.lds-dual-ring').show();
         const url = `${this.getSingleEndpoint}/${id}`;
         $.ajax({
             url,
             method: 'get'
         }).done((res) => {
+            $('.lds-dual-ring').hide();
             console.log('done run');
             Object.assign(this.conversation, res.conversation);
             console.log('this', this.conversation, res);
@@ -307,6 +311,7 @@ class Chat {
         $.each( data, function( i, field ) {
             formData[field.name] = field.value;
         });
+        $('.lds-dual-ring').show();
         $.ajax({
             url: this.formEndpoint,
             data: formData,
@@ -316,7 +321,7 @@ class Chat {
             }
         }).done(
             (res)=>{
-
+                $('.lds-dual-ring').hide();
                 this.handleResponse(res);
 
             });
