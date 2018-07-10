@@ -12,7 +12,7 @@ class buildDb extends Command
      *
      * @var string
      */
-    protected $signature = 'build:dev';
+    protected $signature = 'build:db {dev}';
 
     /**
      * The console command description.
@@ -38,12 +38,23 @@ class buildDb extends Command
      */
     public function handle()
     {
+
+        $dev = $this->argument('dev');
+
+
         Artisan::call('migrate:fresh');
         Artisan::call('migrate', ['--path' =>'database/migrations/add_permission']);
         Artisan::call('migrate', ['--path' => 'database/migrations/add_workhours']);
         Artisan::call('migrate', ['--path' => 'database/migrations/messages']);
         Artisan::call('migrate', ['--path' => 'database/migrations/update_table']);
-        Artisan::call('db:seed');
-        Artisan::call('db:seed', ['--class' => 'DevelopmentSeeder']);
+
+
+
+        if($dev === "true") {
+            Artisan::call('db:seed');
+            Artisan::call('db:seed', ['--class' => 'DevelopmentSeeder']);
+        }
+
+
     }
 }

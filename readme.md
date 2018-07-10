@@ -40,4 +40,52 @@ Ez a szabadság nyilvántartó
     + üzenet küldés:  ctrl+enter
     
     
+
     
+## Telepítés
+```
+
+composer install
+
+```
+
+```
+create .env file
+fill .env with data ->
+
+APP_NAME={appName}
+APP_ENV=local
+APP_KEY=base64:........
+APP_DEBUG=false
+APP_LOG_LEVEL=debug
+APP_URL=http://localhost:8201
+TIME_ZONE=Europe/Budapest
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE={dbName}
+DB_USERNAME={userName}
+DB_PASSWORD={password}
+
+
+GOOGLE_CALENDAR_ID={key}@group.calendar.google.com
+BROADCAST_DRIVER=log
+CACHE_DRIVER=file
+SESSION_DRIVER=file
+QUEUE_DRIVER=sync
+```
+
+```
+php artisan key:generate
+```
+
+```
+
+/**
+ * bool {dev}
+ * development seeder run for test data
+ */ 
+php artisan build:db {dev}
+  
+```
