@@ -277,14 +277,16 @@ class Chat {
         $('#conversation-list').html('').append(...conversations);
     }
 
-    getSingleConversation(id) {
-        $('.lds-dual-ring').show();
+    getSingleConversation(id, fresh = false) {
+        if(!fresh)
+            $('.lds-dual-ring').show();
         const url = `${this.getSingleEndpoint}/${id}`;
         $.ajax({
             url,
             method: 'get'
         }).done((res) => {
-            $('.lds-dual-ring').hide();
+            if(!fresh)
+                $('.lds-dual-ring').hide();
             Object.assign(this.conversation, res.conversation);
             this.showSingleConversation();
             this.setAnswerFormData();
@@ -379,7 +381,7 @@ class Chat {
     runRefresh() {
         clearInterval(this.timer);
         setInterval(()=> {
-            this.getSingleConversation(this.conversation.conversationData.id);
+            this.getSingleConversation(this.conversation.conversationData.id, true);
         },5000);
     }
 

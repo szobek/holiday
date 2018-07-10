@@ -51,6 +51,9 @@
 
                         <div class="form-group col-md-12">
                             <p>Kivett szabadnapok: {{ $allHoliday or '' }}</p>
+                            @if(strlen($alert) > 0)
+                                <p class="alert-danger">{{ $alert }}</p>
+                            @endif
                         </div>
                     </div>
 

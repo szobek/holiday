@@ -48,6 +48,8 @@ class UserController extends Controller
     public function userEditView($id)
     {
 
+        $alert = "";
+
         if ((int)$id === Auth::user()->id || cp(3, $this->user_permissionIds)) {
         } else {
 //            dd2("nem nézheti meg az oldalt");
@@ -80,8 +82,12 @@ class UserController extends Controller
         $hcc = new HolidayCountController();
         $allHoliday = $hcc->countUserHoliday(Carbon::now()->year, $id);
 
+        if($user->holidays <= $allHoliday) {
+            $alert = 'Elogyott a szabadság';
+        }
 
-        return view('users/profile', compact('user', 'companies', 'action', 'delete', 'companies_list', 'pl', 'userEvents', 'allHoliday'));
+
+        return view('users/profile', compact('user', 'companies', 'action', 'delete', 'companies_list', 'pl', 'userEvents', 'allHoliday', 'alert'));
     }
 
     /**
