@@ -1,5 +1,5 @@
 function setDropdown(option) {
-    
+
     const users = window.user;
     const company = parseInt(option.value);
     const select = document.querySelector("select[name='name']");
@@ -55,6 +55,11 @@ $('.hidden-form').on('click', function () {
 $(document).ready(function() {
     if($('#holiday').length) $('#holiday').DataTable();
     if($('#workhours').length) $('#workhours').DataTable();
+    if($('#contacts').length) {
+        let c = new Contact();
+    }
+
+
 
     if($('#wh-ci-container').length) {
         $('#incoming').on('click', function() {
@@ -133,7 +138,10 @@ $(document).ready(function() {
     };
 
 
-    window.chat = new Chat();
+    if($('.message-detail-container').length) {
+        window.chat = new Chat();
+    }
+
 
 
 });
@@ -160,6 +168,84 @@ let saveWorkHour = (type) => {
     })
 };
 
+class Contact {
+
+    constructor() {
+        this.data = {};
+        this.contacts = [];
+
+        this.table = $('#contacts').DataTable( {
+            ajax: {
+                url: '/api/contacts',
+                dataSrc: 'contacts'
+            },
+            columns: [
+                { data: 'contact_name' },
+                { data: 'contact_phone' },
+                { data: 'contact_email' },
+                { data: 'contact_address' },
+            ],
+        } );
+
+        $('#saveContact').on('click', this.createNewContact.bind(this));
+
+    }
+
+    collectData() {
+        this.data = {
+            contact_name: $('#contact_name').val(),
+            contact_email: $('#contact_email').val(),
+            contact_phone: $('#contact_phone').val(),
+            contact_address: $('#contact_address').val(),
+        };
+
+        return this.checkData();
+    }
+
+    checkData( ) {
+        let errors = 0;
+        console.log('a data', this.data);
+        if(!this.data.contact_name.length) {
+            alert('Kötelező a név mező');
+            errors++;
+        }
+        if(!this.data.contact_email.length) {
+            alert('Kötelező az email mező');
+            errors++;
+        }
+
+        return (errors === 0);
+
+    }
+
+    createNewContact() {
+        if(this.collectData()) {
+            $.ajax({
+                url: '/api/contact/new',
+                data: this.data,
+                method: 'post',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            }).done(res => {
+                if(res.status) {
+                    this.table.ajax.reload( null, false );
+                    this.data = {};
+                    $('#contact_name, #contact_email, #contact_phone, #contact_address').val('');
+
+                }
+
+            });
+        }
+
+    }
+
+
+
+}
+
+
+window.cont = Contact;
 
 class Chat {
 
@@ -317,7 +403,7 @@ class Chat {
                 </p>
             </li>`;
     }
-    
+
     showSingleConversation() {
         let messages = this.conversation.messages.map(message => this.messageTemplate(message) );
         $('#message-list').html('').append(...messages);

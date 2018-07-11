@@ -39,6 +39,9 @@
                         @endif
                         <div class="dropdown-divider"></div>
                         <a class="nav-link" href="/workhours">Jelenléti</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="nav-link" href="/contacts">Névjegyzék</a>
+
 
                     </div>
                 </li>

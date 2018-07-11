@@ -47,7 +47,7 @@ class UserController extends Controller
      */
     public function userEditView($id)
     {
-
+        $contacts = [];
         $alert = "";
 
         if ((int)$id === Auth::user()->id || cp(3, $this->user_permissionIds)) {
@@ -86,8 +86,9 @@ class UserController extends Controller
             $alert = 'Elogyott a szabadság';
         }
 
+        $contacts = (new ContactsController)->getUserContacts(Auth::user()->id);
 
-        return view('users/profile', compact('user', 'companies', 'action', 'delete', 'companies_list', 'pl', 'userEvents', 'allHoliday', 'alert'));
+        return view('users/profile', compact('user', 'companies', 'action', 'delete', 'companies_list', 'pl', 'userEvents', 'allHoliday', 'alert', 'contacts'));
     }
 
     /**

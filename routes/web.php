@@ -97,11 +97,23 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/api/messages/answer','MessageController@insertMessageToConversation');
     Route::post('/api/messages/new','MessageController@createConversation');
 
+
+    Route::get('contacts','ContactsController@indexView');
+    Route::get('/api/contacts','ContactsController@apiGetContacts');
+    Route::post('/api/contact/new','ContactsController@apiCreateContact');
+    Route::post('/api/contact/update','MessageController@createConversation');
+
+
+
+
     Route::get('messages','MessageController@getConversation');
     Route::get('message/{id}','MessageController@getMessagesByConversationId');
     Route::get('messages/new','MessageController@createConversationView');
     Route::post('messages/new','MessageController@createConversation');
     Route::post('messages/answer','MessageController@insertMessageToConversation');
+
+
+
 
 
 //    Route::get('workhours/date-range/{start}/{end}', 'ConversationController@listView');

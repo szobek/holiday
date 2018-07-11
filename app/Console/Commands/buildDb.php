@@ -39,7 +39,7 @@ class buildDb extends Command
     public function handle()
     {
 
-        /*$dev = $this->argument('dev');
+        $dev = $this->argument('dev');
 
 
         Artisan::call('migrate:fresh');
@@ -47,13 +47,14 @@ class buildDb extends Command
         Artisan::call('migrate', ['--path' => 'database/migrations/add_workhours']);
         Artisan::call('migrate', ['--path' => 'database/migrations/messages']);
         Artisan::call('migrate', ['--path' => 'database/migrations/update_table']);
+        Artisan::call('migrate', ['--path' => 'database/migrations/contacts']);
 
 
 
         if($dev === "true") {
             Artisan::call('db:seed');
             Artisan::call('db:seed', ['--class' => 'DevelopmentSeeder']);
-        }*/
+        }
 
 
     }
