@@ -1,5 +1,5 @@
 
-<div class="container">
+<div class="container" id="contacts-container">
 
     <div class="row">
         <div class="col-md-12">
@@ -7,27 +7,10 @@
         </div>
         <section class="col-12">
             <p class="text-right">
-                <i class="fa fa-plus-square-o " style="font-size: 1.2rem" aria-hidden="true" data-toggle="collapse"
+                <i class="fa fa-plus-square-o " style="font-size: 1.4rem" aria-hidden="true" data-toggle="collapse"
                    href="#userContacts" aria-expanded="false" aria-controls="userContacts"></i>
             </p>
         </section>
-    </div>
-
-    <div class="row">
-        <div class="col-md-12">
-            <table class="table table-bordered table-striped" id="contacts">
-                <thead>
-                <tr>
-                    <th>Név</th>
-                    <th>Telefon</th>
-                    <th>E-mail</th>
-                    <th>Cím</th>
-                </tr>
-                </thead>
-                <tbody id="contact-list"></tbody>
-            </table>
-        </div>
-
 
         <div class="col-md-12">
 
@@ -65,6 +48,25 @@
 
 
         </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-bordered table-striped" id="contacts">
+                <thead>
+                <tr>
+                    <th>Név</th>
+                    <th>Telefon</th>
+                    <th>E-mail</th>
+                    <th>Cím</th>
+                </tr>
+                </thead>
+                <tbody id="contact-list"></tbody>
+            </table>
+        </div>
+
+
+
     </div>
 </div>
 
