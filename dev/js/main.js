@@ -152,7 +152,6 @@ $('#company-selector').on('change', function () {
 
 
 
-
 let saveWorkHour = (type) => {
     let data = {
         uid: $('#user').val(),
@@ -342,7 +341,8 @@ class Chat {
             console.log('done run');
             this.listConversations(res);
             $('.lds-dual-ring').hide();
-        });
+        },
+            error => console.log(error));
     }
 
     conversationsTemplate(conversation) {

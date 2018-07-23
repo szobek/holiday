@@ -35,7 +35,7 @@ class UrlController extends Controller
     public function welcome(Request $request, $year = "")
     {
 //        dd('http://' . $request->getHttpHost());
-
+//        dd(phpinfo());
 
 
         if($year == "") $year = date('Y-m-d'); // ha nincs megadva, akkor az aktuális évet választom
