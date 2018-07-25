@@ -224,7 +224,7 @@
                     <tr>
                         <td class="align daynum" rowspan="2">{{$item->num}}</td>
                         <td class="check">Érkezett</td>
-                        <td class="fromto"></td>
+                        <td class="fromto">{{ $item->start OR '' }}</td>
                         <td class="sign"></td>
                         <td class="align hournum" rowspan="2">
 
@@ -238,13 +238,13 @@
                                 <div class="strikeout"></div>
                             {{--betegszabi--}}
                             @else
-
+                                {{$item->all OR ''}}
                             @endif
                         </td>
                     </tr>
                     <tr>
                         <td class="check">Távozott</td>
-                        <td class="fromto"></td>
+                        <td class="fromto">{{ $item->end OR '' }}</td>
                         <td class="sign"></td>
                     </tr>
                 @endif
@@ -253,7 +253,6 @@
             </tbody>
         </table>
     </div>
-
 
     <div class="half">
         <table class="sheet">
@@ -277,7 +276,7 @@
                     <tr>
                         <td class="align daynum" rowspan="2">{{$item->num}}</td>
                         <td class="check">Érkezett</td>
-                        <td class="fromto"></td>
+                        <td class="fromto">{{ $item->start OR '' }}</td>
                         <td class="sign"></td>
                         <td class="align hournum" rowspan="2">
 
@@ -291,13 +290,13 @@
                                 <div class="strikeout"></div>
                                 {{--betegszabi--}}
                             @else
-
+                                {{$item->all OR ''}}
                             @endif
                         </td>
                     </tr>
                     <tr>
                         <td class="check">Távozott</td>
-                        <td class="fromto"></td>
+                        <td class="fromto">{{ $item->end OR '' }}</td>
                         <td class="sign"></td>
                     </tr>
                 @endif

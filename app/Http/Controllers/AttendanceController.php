@@ -104,6 +104,12 @@ class AttendanceController extends Controller
                 $tempData->sick = false;
             }
 
+            if($tempData->workDay) {
+                $tempData->start = "08:00";
+                $tempData->end = "17:00";
+                $tempData->all = "8";
+            }
+
 
             $pdfData[] = $tempData;
             $tempDay = $tempDay->copy()->addDay();
@@ -125,7 +131,7 @@ class AttendanceController extends Controller
 
 //        dd($items);
 
-        return view('pdf.jelenleti', compact('pdfData','user', 'company', 'year', 'month','years', 'months'));
+        return view('pdf/jelenleti', compact('pdfData','user', 'company', 'year', 'month','years', 'months'));
 
     }
     
