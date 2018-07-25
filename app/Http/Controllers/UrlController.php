@@ -14,6 +14,7 @@ use Illuminate\Mail\Message;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Intervention\Image\Facades\Image;
 use Maatwebsite\Excel\Facades\Excel;
 use \PDF;
 use Illuminate\Http\Request;
@@ -34,10 +35,6 @@ class UrlController extends Controller
 
     public function welcome(Request $request, $year = "")
     {
-//        dd('http://' . $request->getHttpHost());
-//        dd(phpinfo());
-
-
         if($year == "") $year = date('Y-m-d'); // ha nincs megadva, akkor az aktuális évet választom
         $events = CalendarController::findAllEventOfYearData($year);
         return view('list/table', compact('events'));
