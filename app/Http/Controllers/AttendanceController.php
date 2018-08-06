@@ -104,7 +104,7 @@ class AttendanceController extends Controller
                 $tempData->sick = false;
             }
 
-            if($tempData->workDay) {
+            if($tempData->workDay && !$tempData->holiday) {
                 $tempData->start = "08:00";
                 $tempData->end = "17:00";
                 $tempData->all = "8";
