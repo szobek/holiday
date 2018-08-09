@@ -6,12 +6,13 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <iframe src="https://calendar.google.com/calendar/embed?src=qfeq4jsp3jp9bnkof8fv9hvjag%40group.calendar.google.com&ctz=Europe%2FBudapest" style="border: 0" width="100%" height="600" frameborder="0" scrolling="no"></iframe>
+
+                <iframe src="{{ env('GOOGLE_CALENDAR_EMBED') }}" style="border: 0" width="100%" height="600" frameborder="0" scrolling="no"></iframe>
             </div>
         </div>
     </div>
 
-    <div class="container">
+    <div class="container mb-5">
 
         <script>
             window.events = {!! json_encode($events) !!};
