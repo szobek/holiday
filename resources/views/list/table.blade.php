@@ -6,8 +6,9 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-
+                @if(cp(2,session('permissions')))
                 <iframe src="{{ env('GOOGLE_CALENDAR_EMBED') }}" style="border: 0" width="100%" height="600" frameborder="0" scrolling="no"></iframe>
+                @endif
             </div>
         </div>
     </div>

@@ -300,12 +300,14 @@ class checkinController extends Controller
 
 
         $user = User::find($request->user);
+//        dd($user);
         if(!is_null($user)) {
 
             $start = Carbon::parse($request->incoming)->startOfDay();
             $end = Carbon::parse($request->incoming)->endOfDay();
 
-            $row = WorkHours::where('user_id', $user->id)->whereBetween('incoming', array($start, $end))->orWhereBetween('outgoing', array($start, $end))->first();
+            $row = WorkHours::where('user_id', $user->id)->whereBetween('incoming', array($start, $end))->whereBetween('outgoing', array($start, $end))->first();
+
             if(is_null($row)) {
 
                 WorkHours::create([

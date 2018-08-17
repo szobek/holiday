@@ -70,6 +70,8 @@ DB_PASSWORD={password}
 
 
 GOOGLE_CALENDAR_ID={key}@group.calendar.google.com
+GOOGLE_CALENDAR_EMBED=https://calendar.google.com/calendar/embed?src=********%40group.calendar.google.com&ctz=Europe%2FBudapest
+
 BROADCAST_DRIVER=log
 CACHE_DRIVER=file
 SESSION_DRIVER=file
@@ -88,4 +90,10 @@ php artisan key:generate
  */ 
 php artisan build:db {dev}
   
+```
+
+```
+google json save to
+storage\app\google-calendar\service-account-credentials.json
+
 ```

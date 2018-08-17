@@ -12,6 +12,11 @@
         <link rel="icon" href="/assets/logo.png" type="image/png">
         <link rel="shortcut icon" href="/assets/logo.png" type="image/png">
 
+        <script>
+            window.me = {!! json_encode(\Illuminate\Support\Facades\Auth::user()->id)!!};
+
+        </script>
+
     </head>
     <body>
 
@@ -23,6 +28,8 @@
     </body>
     @include('elements',["js" => true])
     @yield('sub_js')
+
+
 
 
 

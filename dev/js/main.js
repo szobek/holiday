@@ -141,8 +141,10 @@ $(document).ready(function() {
     if($('.message-detail-container').length) {
         window.chat = new Chat();
     }
+    if($('#conversation-list').length) {
+        window.chat = new Chat();
 
-
+    }
 
 });
 
@@ -338,7 +340,7 @@ class Chat {
             url: this.getAllEndpoint,
             method: 'get'
         }).done((res) => {
-            console.log('done run');
+
             this.listConversations(res);
             $('.lds-dual-ring').hide();
         },
@@ -349,7 +351,9 @@ class Chat {
 
         let receiver = (conversation.conversationData.sender.id === window.me) ? conversation.conversationData.receiver.name : conversation.conversationData.sender.name;
         return `<a href="/message/${conversation.conversationData.id}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                    ${receiver} - ${conversation.conversationData.title}
+                    
+                    <span>${receiver} - ${conversation.conversationData.title}</span>
+                    ${ (conversation.conversationData.unread) ? '<span class="badge badge-primary badge-danger">!</span>' : '' }
                     <span class="badge badge-primary badge-pill">${conversation.conversationData.messagesLength}</span>
                 </a>`;
     }
@@ -474,4 +478,34 @@ class Chat {
 
 }
 
+class CheckInfo {
+
+    constructor() {
+        this.init();
+    }
+
+    init() {
+
+        $.ajax({
+            url: '/api/messages/check',
+            method: 'get',
+            data: {uid:window.me}
+
+        }).done((res) => {
+            this.alertNewMessage(res);
+        });
+
+    }
+
+    alertNewMessage(num) {
+        if(num > 0)
+            $('#messageDropdown span').show().html(num);
+        else
+            $('#messageDropdown span').hide().html('');
+    }
+}
+
+
+let check = new CheckInfo();
+window.checkInfo = CheckInfo;
 

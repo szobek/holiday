@@ -96,6 +96,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/api/users','MessageController@getApiUsers');
     Route::post('/api/messages/answer','MessageController@insertMessageToConversation');
     Route::post('/api/messages/new','MessageController@createConversation');
+    Route::get('/api/messages/check','MessageController@checkNewMessage');
 
 
     Route::get('contacts','ContactsController@indexView');
@@ -111,6 +112,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('messages/new','MessageController@createConversationView');
     Route::post('messages/new','MessageController@createConversation');
     Route::post('messages/answer','MessageController@insertMessageToConversation');
+
 
 
 

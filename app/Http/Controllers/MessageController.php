@@ -174,25 +174,28 @@ class MessageController extends Controller
     }
 
     /**
+     * lekéri egy adott beszélgetés üzeneteit
      * @author norbi
      * @return
      */
     public function getApiMessagesByConversationId($id){
+//        dd('sdsd');
         $conversation = Conversations::find($id);
         if(is_null($conversation)) {
             return response()->json(['error' => 'Nincs ilyen beszélgetés']);
         }
-
+        $this->setReadStatusOfMessage($id);
         $this->conversation = Conversations::formatConversation($conversation);
         return response()->json(['conversation' => $this->conversation]);
     }
 
     /**
+     * beállítja az olvasott státuszt az üzenetnél
      * @author norbi
      * @return
      */
     public function setReadStatusOfMessage($id){
-
+        Messages::where('conversation_id', $id)->update(['receiver_read' => 1]);
     }
 
 
@@ -202,6 +205,16 @@ class MessageController extends Controller
      */
     public function getApiUsers(){
         return response()->json(['users' => User::where('id','!=',Auth::user()->id)->get()->toArray()]);
+    }
+
+    /**
+     * ellenőrzi, hogy érkezett-e új üzenet
+     * @author norbi
+     * @return
+     */
+    public function checkNewMessage(Request $request){
+        $uid = $request->uid;
+        return Messages::where('receiver_id', $uid)->where('receiver_read',0)->count();
     }
 
 

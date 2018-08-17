@@ -51,7 +51,8 @@
             <li class="nav-item  dropdown">
 
                 <a class="nav-link dropdown-toggle" href="#" id="messageDropdown" role="button" data-toggle="dropdown"
-                   aria-haspopup="true" aria-expanded="false">
+                   aria-haspopup="true" aria-expanded="false" style="position: relative">
+                    <span class="badge badge-danger" style="position: absolute; top: 0; left: 55px; display: none "></span>
                     Üzenetek
                 </a>
                 <div class="dropdown-menu" aria-labelledby="messageDropdown">

@@ -17,10 +17,7 @@
 @section('content')
 
     <div class="lds-dual-ring"></div>
-    <script>
-        window.me = {!! json_encode(\Illuminate\Support\Facades\Auth::user()->id)!!};
 
-    </script>
 
     <div class="container">
         <div class="row">

@@ -60,6 +60,8 @@ class Conversations extends Model
         return $message_list;
     }
 
+
+
     /**
      * @author norbi
      * @return
@@ -106,8 +108,11 @@ class Conversations extends Model
             $conversation->messages = $conversationParam->getMessages();
             $conversation->conversationData->messagesLength = count($messages);
         }
-        else
+        else {
             $conversation->conversationData->messagesLength = count($conversationParam->getMessages());
+            $conversation->conversationData->unread = (Messages::where('receiver_id', Auth::user()->id)->where('conversation_id', $conversationParam->id)->where('receiver_read',0)->count() > 0);
+        }
+
 
 
         return $conversation;
